@@ -27,8 +27,13 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	})
 
-	.controller('ScoreboardController', function(players) {
+	.controller('ScoreboardController', function(ParseService, players) {
 	    this.players = players;
+        this.createPlayer = function (name) {
+            ParseService.Player.post({
+                name: name
+            })
+        }
 	})
 
 	.controller('GameController', function() {
