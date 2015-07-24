@@ -7,24 +7,118 @@ angular.module('pdxPingPong', ['ngRoute'])
 			})
 			.when('/scoreboard',  {
 				controller: 'ScoreboardController as scoreboard',
-				templateUrl: 'views/scoreboard.html'
+				templateUrl: 'views/scoreboard.html',
+				resolve: {
+					players: function(ParseService) {
+						return ParseService.Player.get();
+					}
+				}
 
 			})
 			.when('/game', {
 				controller: 'GameController as game',
 				templateUrl: 'views/game.html'
 
-			})
+			});
 	})
 
 	.controller('MainController', function () {
 
 	})
 
-	.controller('ScoreboardController', function() {
-
+	.controller('ScoreboardController', function(players) {
+		this.players = players;
 	})
 
 	.controller('GameController', function() {
 
+	})
+
+	.factory('ParseService', function(Resource) {
+	    var baseUrl = 'https://api.parse.com/1/',
+	        headers = {
+	            'X-Parse-Application-Id': 'lkTFs9P5hXRbxiLLgwt7NIzP7Xw9rDUPcffN1VMI',
+	            'X-Parse-REST-API-Key': 'HcST17j2wYY3XpZYtnymtlBUtnvxWJmRpgrVVpvO',
+	            'Content-Type': 'application/json'
+	        };
+
+	    function resource(url) {
+	        return Resource(baseUrl + url, {
+	            headers: headers
+	        });
+	    }
+
+	    return {
+	        Game: resource('classes/Game/:id'),
+	        Player: resource('classes/Player/:id')
+	    };
+	})
+
+	.factory('Resource', function($http) {
+	    var
+	        // Matches param placeholders in a url of the form, e.g.
+	        // `rest/peoples/:id` where `id` is the param
+	        param_re = /:([a-z]\w*)/g,
+
+	        // Matches repeating slashes, except for those following a `:`
+	        slashes_re = /(^|[^:])\/{2,}/g;
+
+	    var constructUrl = function(url, data) {
+	        // Replace url labels with an actual value, or remove
+	        // it when no value is present
+	        url = url.replace(param_re, function(_, key) {
+	            var val = popFirstKey(data, key);
+	            return 'undefined' === typeof val ? '' : val;
+	        });
+
+	        // Strip repeating slashes
+	        url = url.replace(slashes_re, '$1/');
+			// Strip trailing slashes
+	        url = url.replace(/\/$/, '');
+
+	        return url;
+	    };
+
+	    // Get a value at `key` from the first object it
+	    // shows up in, then remove that property from the object
+	    var popFirstKey = function() {
+	        var args = Array.prototype.slice.call(arguments, 0),
+	            key = args.pop(),
+	            obj,
+	            val;
+
+	        while ((obj = args.pop())) {
+	            if (key in obj) {
+	                val = obj[key];
+	                delete obj[key];
+	                return val;
+	            }
+	        }
+	    };
+
+	    function ResourceLite(url, config) {
+	        this.url = url;
+	        this.config = config || {};
+	    }
+
+	    ['get', 'put', 'post', 'delete'].forEach(function(method) {
+	        ResourceLite.prototype[method] = function(config) {
+	            config = config || {};
+
+	            var data = angular.extend({}, config.data),
+	                url = constructUrl(this.url, data),
+	                headers = this.config.headers;
+
+	            return $http[method](url, {
+	                data: data,
+	                headers: headers
+	            }).then(function(data) {
+					return data.data.results;
+				});
+	        };
+	    });
+
+	    return function Resource(url, config) {
+	        return new ResourceLite(url, config);
+	    };
 	});
