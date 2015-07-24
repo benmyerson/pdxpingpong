@@ -1,30 +1,36 @@
-@-webkit-viewport { width: device-width; }
-@-moz-viewport    { width: device-width; }
-@-ms-viewport     { width: device-width; }
-@-o-viewport      { width: device-width; }
-@viewport         { width: device-width; }
-
+@-webkit-viewport {
+  width: device-width;
+}
+@-moz-viewport {
+  width: device-width;
+}
+@-ms-viewport {
+  width: device-width;
+}
+@-o-viewport {
+  width: device-width;
+}
+@viewport {
+  width: device-width;
+}
 *,
 *::before,
 *::after {
-    box-sizing: inherit;
+  box-sizing: inherit;
 }
-
 html,
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
-
 html {
-    min-width: 320px;
-    box-sizing: border-box;
+  min-width: 320px;
+  box-sizing: border-box;
 }
-
 body {
-    color: #454545;
-    font: 400 16px/1.42 "proxima-nova", "Helvetica Neue", Helvetica, "Open Sans", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -webkit-overflow-scrolling: touch;
-    cursor: default;
+  color: #454545;
+  font: 400 16px/1.42 "proxima-nova", "Helvetica Neue", Helvetica, "Open Sans", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-overflow-scrolling: touch;
+  cursor: default;
 }
