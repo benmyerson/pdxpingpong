@@ -2,6 +2,7 @@ module.exports = function(grunt) {
     'use strict';
 
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.initConfig({
         less: {
@@ -12,6 +13,15 @@ module.exports = function(grunt) {
                 options: {
                     compress: false,
                     paths: ['public/styles']
+                }
+            }
+        },
+        watch: {
+            styles: {
+                files: ['public/**/*.less'],
+                tasks: ['less'],
+                options: {
+                    spawn: false
                 }
             }
         }
