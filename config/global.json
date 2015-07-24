@@ -1,0 +1,14 @@
+{
+  "global": {
+    "parseVersion": "1.5.0"
+  },
+  "applications": {
+    "_default": {
+      "link": "pingpong"
+    },
+    "pingpong": {
+      "applicationId": "lkTFs9P5hXRbxiLLgwt7NIzP7Xw9rDUPcffN1VMI",
+      "masterKey": "fg4JCky2hNXUGdIcaW5JdroGqmbVEJvFLoSmkwR1"
+    }
+  }
+}
