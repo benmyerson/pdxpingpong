@@ -12,14 +12,14 @@ angular.module('pdxPingPong', ['ngRoute'])
 	            resolve: {
 	                players: function(ParseService) {
 	                    return ParseService.Player.get({
-                            params: {
-                                where: {
-
-                                },
-                                order: "-wins",
-                                limit: 20
-                            }
-                        });
+	                        params: {
+	                            where: {
+									
+	                            },
+	                            order: "-wins",
+	                            limit: 20
+	                        }
+	                    });
 	                }
 	            }
 
@@ -37,12 +37,12 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	.controller('ScoreboardController', function(ParseService, players) {
 	    this.players = players;
-        this.newPlayerName = "";
-        this.createPlayer = function (name) {
-            ParseService.Player.post({
-                name: name
-            })
-        }
+	    this.newPlayerName = "";
+	    this.createPlayer = function(name) {
+	        ParseService.Player.post({
+	            name: name
+	        });
+	    };
 	})
 
 	.controller('GameController', function() {
@@ -76,9 +76,12 @@ angular.module('pdxPingPong', ['ngRoute'])
 	        param_re = /:([a-z]\w*)/g,
 
 	        // Matches repeating slashes, except for those following a `:`
-	        slashes_re = /(^|[^:])\/{2,}/g;
+	        slashes_re = /(^|[^:])\/{2,}/g,
+			buildUrl,
+			popKey;
 
-	    var constructUrl = function(url, data) {
+
+	    buildUrl = function(url, data) {
 	        // Replace url labels with an actual value, or remove
 	        // it when no value is present
 	        url = url.replace(param_re, function(_, key) {
@@ -96,13 +99,13 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	    // Get a value at `key` from the first object it
 	    // shows up in, then remove that property from the object
-	    var popKey = function(obj, key) {
-			var val;
-            if (key in obj) {
-                val = obj[key];
-                delete obj[key];
-            }
-            return val;
+	    popKey = function(obj, key) {
+	        var val;
+	        if (key in obj) {
+	            val = obj[key];
+	            delete obj[key];
+	        }
+	        return val;
 	    };
 
 	    function ResourceLite(url, config) {
@@ -112,14 +115,19 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	    ['get', 'put', 'post', 'delete'].forEach(function(method) {
 	        ResourceLite.prototype[method] = function(data) {
-	            var data = angular.extend({}, data),
-	                url = constructUrl(this.url, data),
-	                headers = this.config.headers;
+	            var headers = this.config.headers,
+					params,
+	                url;
+
+	            data = angular.extend({}, data);
+				params = angular.extend({}, popKey(data, 'params'));
+	            url = buildUrl(this.url, data);
 
 	            return $http({
-                    method: method,
-                    url: url,
+	                method: method,
+	                url: url,
 	                data: data,
+					params: params,
 	                headers: headers
 	            }).then(function(response) {
 	                return response.data.results;
