@@ -11,7 +11,15 @@ angular.module('pdxPingPong', ['ngRoute'])
 	            templateUrl: 'views/scoreboard.html',
 	            resolve: {
 	                players: function(ParseService) {
-	                    return ParseService.Player.get();
+	                    return ParseService.Player.get({
+                            params: {
+                                where: {
+
+                                },
+                                order: "-wins",
+                                limit: 20
+                            }
+                        });
 	                }
 	            }
 
