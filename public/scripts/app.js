@@ -14,7 +14,7 @@ angular.module('pdxPingPong', ['ngRoute'])
 	                    return ParseService.Player.get({
 	                        params: {
 	                            where: {
-									
+
 	                            },
 	                            order: "-wins",
 	                            limit: 20
@@ -64,8 +64,8 @@ angular.module('pdxPingPong', ['ngRoute'])
 	    }
 
 	    return {
-	        Game: resource('classes/Game/:id'),
-	        Player: resource('classes/Player/:id')
+	        Game: resource('classes/Game/:objectId'),
+	        Player: resource('classes/Player/:objectId')
 	    };
 	})
 
