@@ -1,33 +1,34 @@
 angular.module('pdxPingPong', ['ngRoute'])
+
 	.config(function($routeProvider) {
-		$routeProvider
-			.when('/', {
-				controller: 'MainController as main',
-				templateUrl: 'views/main.html'
-			})
-			.when('/scoreboard',  {
-				controller: 'ScoreboardController as scoreboard',
-				templateUrl: 'views/scoreboard.html',
-				resolve: {
-					players: function(ParseService) {
-						return ParseService.Player.get();
-					}
-				}
+	    $routeProvider
+	        .when('/', {
+	            controller: 'MainController as main',
+	            templateUrl: 'views/main.html'
+	        })
+	        .when('/scoreboard', {
+	            controller: 'ScoreboardController as scoreboard',
+	            templateUrl: 'views/scoreboard.html',
+	            resolve: {
+	                players: function(ParseService) {
+	                    return ParseService.Player.get();
+	                }
+	            }
 
-			})
-			.when('/game', {
-				controller: 'GameController as game',
-				templateUrl: 'views/game.html'
+	        })
+	        .when('/game', {
+	            controller: 'GameController as game',
+	            templateUrl: 'views/game.html'
 
-			});
+	        });
 	})
 
-	.controller('MainController', function () {
+	.controller('MainController', function() {
 
 	})
 
 	.controller('ScoreboardController', function(players) {
-		this.players = players;
+	    this.players = players;
 	})
 
 	.controller('GameController', function() {
@@ -56,8 +57,8 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	.factory('Resource', function($http) {
 	    var
-	        // Matches param placeholders in a url of the form, e.g.
-	        // `rest/peoples/:id` where `id` is the param
+		    // Matches param placeholders in a url of the form, e.g.
+		    // `rest/peoples/:id` where `id` is the param
 	        param_re = /:([a-z]\w*)/g,
 
 	        // Matches repeating slashes, except for those following a `:`
@@ -73,7 +74,7 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	        // Strip repeating slashes
 	        url = url.replace(slashes_re, '$1/');
-			// Strip trailing slashes
+	        // Strip trailing slashes
 	        url = url.replace(/\/$/, '');
 
 	        return url;
@@ -113,8 +114,8 @@ angular.module('pdxPingPong', ['ngRoute'])
 	                data: data,
 	                headers: headers
 	            }).then(function(data) {
-					return data.data.results;
-				});
+	                return data.data.results;
+	            });
 	        };
 	    });
 
