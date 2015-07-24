@@ -29,6 +29,7 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	.controller('ScoreboardController', function(ParseService, players) {
 	    this.players = players;
+        this.newPlayerName = "";
         this.createPlayer = function (name) {
             ParseService.Player.post({
                 name: name
@@ -107,7 +108,9 @@ angular.module('pdxPingPong', ['ngRoute'])
 	                url = constructUrl(this.url, data),
 	                headers = this.config.headers;
 
-	            return $http[method](url, {
+	            return $http({
+                    method: method,
+                    url: url,
 	                data: data,
 	                headers: headers
 	            }).then(function(response) {
