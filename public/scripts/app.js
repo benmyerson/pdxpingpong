@@ -73,7 +73,7 @@ angular.module('pdxPingPong', ['ngRoute'])
 	        // Replace url labels with an actual value, or remove
 	        // it when no value is present
 	        url = url.replace(param_re, function(_, key) {
-	            var val = popFirstKey(data, key);
+	            var val = popKey(data, key);
 	            return 'undefined' === typeof val ? '' : val;
 	        });
 
@@ -87,19 +87,13 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	    // Get a value at `key` from the first object it
 	    // shows up in, then remove that property from the object
-	    var popFirstKey = function() {
-	        var args = Array.prototype.slice.call(arguments, 0),
-	            key = args.pop(),
-	            obj,
-	            val;
-
-	        while ((obj = args.pop())) {
-	            if (key in obj) {
-	                val = obj[key];
-	                delete obj[key];
-	                return val;
-	            }
-	        }
+	    var popKey = function(obj, key) {
+			var val;
+            if (key in obj) {
+                val = obj[key];
+                delete obj[key];
+            }
+            return val;
 	    };
 
 	    function ResourceLite(url, config) {
@@ -108,18 +102,16 @@ angular.module('pdxPingPong', ['ngRoute'])
 	    }
 
 	    ['get', 'put', 'post', 'delete'].forEach(function(method) {
-	        ResourceLite.prototype[method] = function(config) {
-	            config = config || {};
-
-	            var data = angular.extend({}, config.data),
+	        ResourceLite.prototype[method] = function(data) {
+	            var data = angular.extend({}, data),
 	                url = constructUrl(this.url, data),
 	                headers = this.config.headers;
 
 	            return $http[method](url, {
 	                data: data,
 	                headers: headers
-	            }).then(function(data) {
-	                return data.data.results;
+	            }).then(function(response) {
+	                return response.data.results;
 	            });
 	        };
 	    });
