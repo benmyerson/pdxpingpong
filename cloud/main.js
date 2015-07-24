@@ -6,17 +6,55 @@ Parse.Cloud.define("hello", function(request, response) {
 });
 
 
-Parse.Cloud.define("winPerc", function(request, response) {
-    var Player = Parse.Object.extend("Player");
-    var query = new Parse.Query(Player);
+Parse.Cloud.afterSave("Game", function(request) {
+    var game = request.object;
+    var winner = game.get('player1Score') > game.get('player2Score') ? game.get('player1') : game.get('player2');
+    var winnerPoints = Math.max(game.get('player1Score'),game.get('player2Score'));
+    var loser = winner === game.get('player1') ? game.get('player2') : game.get('player1');
+    var loserPoints = Math.min(game.get('player1Score'),game.get('player2Score'));
 
-    query.limit(20);
-    query.find({
-        success: function(results) {
-            response.success(results);
+    var Player = Parse.Object.extend("Player");
+    var winnerQ = new Parse.Query(Player);
+
+    winnerQ.get(winner.id, {
+        success: function(player) {
+            console.log("got winner player");
+            console.log(player);
+            player.increment("games");
+            player.increment("wins");
+            player.increment("totalPoints", winnerPoints);
+            player.increment("opponentTotalPoints", loserPoints);
+            var winPerc = player.get("wins") / player.get("games");
+            var ppG = player.get("totalPoints") / player.get("games");
+            var oppG = player.get("opponetTotalPoints") / player.get("games");
+            player.set("winPercentage", winPerc);
+            player.set("pointsPerGame", ppG);
+            player.set("opponentPointsPerGame", oppG);
+            player.save();
         },
         error: function () {
-            response.error("couldn't get scores")
+            console.log("couldn't find winner player");
         }
-    })
+    });
+    var loserQ = new Parse.Query(Player);
+    loserQ.get(loser.id, {
+        success: function(player) {
+            console.log("got loser player");
+            console.log(player);
+            player.increment("games");
+            player.increment("losses");
+            player.increment("totalPoints", loserPoints);
+            player.increment("opponentTotalPoints", winnerPoints);
+            var winPerc = player.get("wins") / player.get("games");
+            var ppG = player.get("totalPoints") / player.get("games");
+            var oppG = player.get("opponetTotalPoints") / player.get("games");
+            player.set("winPercentage", winPerc);
+            player.set("pointsPerGame", ppG);
+            player.set("opponentPointsPerGame", oppG);
+            player.save();
+        },
+        error: function () {
+            console.log("couldn't find loser player");
+        }
+    });
 });
