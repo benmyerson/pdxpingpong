@@ -1,0 +1,65 @@
+@import "../vars";
+
+.LeaderBoard {
+    // This will be full width at some point
+    width: auto;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.PlayerStats {
+    padding: 1em;
+    font: 800 24px/1.5 "proxima-nova";
+    text-transform: uppercase;
+
+    &__rank,
+    &__name,
+    &__stats {
+        border: 1px solid #2d2d2d;
+    }
+
+    &__rank {
+        width: 1%;
+        border-left: none;
+    }
+
+    &__name {
+        width: 35%;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__stats {
+        border-right: 0;
+    }
+
+    td {
+        padding: 1em;
+
+        small {
+            font-size: 16px;
+            font-weight: 600;
+            color: @text-gray;
+            display: block;
+        }
+
+        td {
+            width: 1%;
+            padding: 0 0.5em;
+
+            &:first-child {
+                padding-left: 0;
+            }
+
+            &:last-child {
+                padding-right: 0;
+            }
+
+            small {
+                font-size: 14px;
+            }
+        }
+    }
+}

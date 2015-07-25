@@ -46,6 +46,18 @@ angular.module('pdxPingPong', ['ngRoute'])
 	    };
 	})
 
+    .filter('rank', function() {
+        return function(number) {
+            return number < 10 ? '0' + number : number;
+        };
+    })
+
+    .filter('ratio', function() {
+        return function(number) {
+            return parseInt(number * 100, 10) + '%';
+        };
+    })
+
 	.controller('GameController', function() {
 
 	})

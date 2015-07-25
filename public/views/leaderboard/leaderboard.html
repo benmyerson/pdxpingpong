@@ -1,13 +1,54 @@
 <div ng-init="vm = leaderboard">
-	<h1>Scoreboard</h1>
-	<ul>
-		<li ng-repeat="player in vm.players">
-			{{player.name}} {{ player.wins }} / {{ player.games }}
-		</li>
-	</ul>
 
-    <div>
-        <input type="text" ng-model="vm.newPlayerName" />
-        <button ng-click="vm.createPlayer(vm.newPlayerName)">Do thing</button>
-    </div>
+    <table class="LeaderBoard">
+        <tbody>
+            <tr class="PlayerStats" ng-repeat="player in vm.players track by player.objectId">
+                <td class="PlayerStats__rank">
+                    {{$index + 1 | rank}}
+                    <small>rank</small>
+                </td>
+                <td class="PlayerStats__name">
+                    {{player.name}}
+                    <small>bodyspace name</small>
+                </td>
+                <td class="PlayerStats__stats">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{player.games}}
+                                    <small>games</small>
+                                </td>
+                                <td>
+                                    {{player.wins}}
+                                    <small>win</small>
+                                </td>
+                                <td>
+                                    {{player.losses}}
+                                    <small>loss</small>
+                                </td>
+                                <td>
+                                    {{player.winPercentage | ratio}}
+                                    <small>ratio</small>
+                                </td>
+                                <td>
+                                    ...
+                                    <small>points</small>
+                                </td>
+                                <td>
+                                    ...
+                                    <small>ppg</small>
+                                </td>
+                                <td>
+                                    ...
+                                    <small>appg</small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
