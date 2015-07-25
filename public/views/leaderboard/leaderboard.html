@@ -1,0 +1,13 @@
+<div ng-init="vm = leaderboard">
+	<h1>Scoreboard</h1>
+	<ul>
+		<li ng-repeat="player in vm.players">
+			{{player.name}} {{ player.wins }} / {{ player.games }}
+		</li>
+	</ul>
+
+    <div>
+        <input type="text" ng-model="vm.newPlayerName" />
+        <button ng-click="vm.createPlayer(vm.newPlayerName)">Do thing</button>
+    </div>
+</div>

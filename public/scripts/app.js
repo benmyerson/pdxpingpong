@@ -1,21 +1,22 @@
 angular.module('pdxPingPong', ['ngRoute'])
 
+	.config(function($compileProvider) {
+		$compileProvider.debugInfoEnabled(false);
+	})
+
 	.config(function($routeProvider) {
 	    $routeProvider
 	        .when('/', {
 	            controller: 'MainController as main',
-	            templateUrl: 'views/main.html'
+	            templateUrl: 'views/main/main.html'
 	        })
-	        .when('/scoreboard', {
-	            controller: 'ScoreboardController as scoreboard',
-	            templateUrl: 'views/scoreboard.html',
+	        .when('/leaderboard', {
+	            controller: 'LeaderboardController as leaderboard',
+	            templateUrl: 'views/leaderboard/leaderboard.html',
 	            resolve: {
 	                players: function(ParseService) {
 	                    return ParseService.Player.get({
 	                        params: {
-	                            where: {
-
-	                            },
 	                            order: "-wins",
 	                            limit: 20
 	                        }
@@ -26,7 +27,7 @@ angular.module('pdxPingPong', ['ngRoute'])
 	        })
 	        .when('/game', {
 	            controller: 'GameController as game',
-	            templateUrl: 'views/game.html'
+	            templateUrl: 'views/game/game.html'
 
 	        });
 	})
@@ -35,7 +36,7 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	})
 
-	.controller('ScoreboardController', function(ParseService, players) {
+	.controller('LeaderboardController', function(ParseService, players) {
 	    this.players = players;
 	    this.newPlayerName = "";
 	    this.createPlayer = function(name) {
@@ -77,8 +78,8 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	        // Matches repeating slashes, except for those following a `:`
 	        slashes_re = /(^|[^:])\/{2,}/g,
-			buildUrl,
-			popKey;
+	        buildUrl,
+	        popKey;
 
 
 	    buildUrl = function(url, data) {
@@ -116,18 +117,18 @@ angular.module('pdxPingPong', ['ngRoute'])
 	    ['get', 'put', 'post', 'delete'].forEach(function(method) {
 	        ResourceLite.prototype[method] = function(data) {
 	            var headers = this.config.headers,
-					params,
+	                params,
 	                url;
 
 	            data = angular.extend({}, data);
-				params = angular.extend({}, popKey(data, 'params'));
+	            params = angular.extend({}, popKey(data, 'params'));
 	            url = buildUrl(this.url, data);
 
 	            return $http({
 	                method: method,
 	                url: url,
 	                data: data,
-					params: params,
+	                params: params,
 	                headers: headers
 	            }).then(function(response) {
 	                return response.data.results;

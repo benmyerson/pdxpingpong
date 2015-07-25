@@ -8,11 +8,15 @@ module.exports = function(grunt) {
         less: {
             pong: {
                 files: {
-                    'public/styles/style.css': 'public/styles/style.less'
+                    'public/styles/style.css': [
+                        'public/views/base.less',
+                        'public/views/**/*.less',
+                        '!**/vars.less'
+                    ]
                 },
                 options: {
                     compress: false,
-                    paths: ['public/styles']
+                    paths: ['public/views']
                 }
             }
         },
