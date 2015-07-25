@@ -8,7 +8,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
     <link rel="stylesheet" href="styles/style.css">
     <script src="//use.typekit.net/dkr5vqk.js"></script>
-    <script>try{Typekit.load();}catch(e){}</script>
+    <script>
+        (function() {
+            // Load them fonts
+            try {
+                Typekit.load();
+            } catch (e) {}
+
+            // Copyright 2014-2015 Twitter, Inc.
+            // Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+            if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+                var msViewportStyle = document.createElement('style');
+                msViewportStyle.appendChild(
+                    document.createTextNode(
+                        '@-ms-viewport{width:auto!important}'
+                    )
+                );
+                document.querySelector('head').appendChild(msViewportStyle);
+            }
+        })();
+    </script>
 </head>
 <body>
     <div ng-view>
