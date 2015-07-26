@@ -35,15 +35,61 @@ body {
 input {
     color:@text-white;
     background: transparent;
+    height:40px;
     border:0;
-    border-bottom: 1px solid @text-gray;
+    border-left: 1px solid @text-gray;
+    padding-left: 10px;
+}
+::-webkit-input-placeholder {
+   color: @text-gray;
+}
+:-moz-placeholder { /* Firefox 18- */
+   color: @text-gray;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+   color: @text-gray;
+}
+:-ms-input-placeholder {  
+   color: @text-gray;
+}
+.logo {
+    background-image:url('../logo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width:374px;
+    height:384px;
+
+}
+select {
+    background: transparent;
+    text-transform: uppercase;
+    color:@text-white;
+    border:0;
+    border-radius: 0;
+    outline: none;
+    padding-right: 30px;
+    background-image: url('../icon.png');
+    background-size: contain;
+    background-position: 100% 0;
+    -webkit-appearance:none;
+    background-repeat: no-repeat;
 }
 button {
     border:0;
     outline:none;
     color: @text-white;
     background: @bbcom-blue;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding:15px;
 }
 button[disabled] {
     background: @text-gray;
+}
+
+.btn--block {
+    display:block;
+    text-align: center;
+    width:100%;
+    margin:30px 0;
 }

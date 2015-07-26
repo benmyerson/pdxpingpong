@@ -17,7 +17,7 @@ angular.module('pdxPingPong', ['ngRoute'])
 	                players: function(ParseService) {
 	                    return ParseService.Player.get({
 	                        params: {
-	                            order: "-wins",
+	                            order: "-winPercentage",
 	                            limit: 20
 	                        }
 	                    });
@@ -63,9 +63,10 @@ angular.module('pdxPingPong', ['ngRoute'])
         };
     })
 
-	.controller('GameController', function(ParseService, players) {
+	.controller('GameController', function($location, ParseService, players) {
 		this.players = players;
 		this.newGame = {};
+		this.currentSeason = "Summer League";
 
 		this.completeGame = function  () {
 			this.newGame.player1 = ParseService.objToPointer(this.player1Obj, "Player");
@@ -73,7 +74,8 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 			var test = ParseService.Game.post(this.newGame);
 
-			this.newGame, this.player1Obj, this.player2Obj = {};
+			this.newGame=this.player1Obj=this.player2Obj = {};
+			$location.path('leaderboard');
 		};
 	})
 

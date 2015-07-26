@@ -1,0 +1,42 @@
+@import "vars";
+
+.NewGame {
+	.logo {
+		margin:0 auto;
+		height:130px;
+		width:130px;
+		margin-bottom: 10px;
+	}
+	text-align: center;
+	h1 {
+		text-transform: uppercase;
+		font-size: 1.2em;
+		line-height: 1;
+		color:@text-white;
+		margin:0;
+	}
+	h2 {
+		text-transform: uppercase;
+		font-size: 0.8em;
+		line-height: 0.9;
+		color:@text-gray;
+		margin:0;
+	}
+	&__form-row {
+		border-top:1px solid @text-gray;
+		border-bottom: 1px solid @text-gray;
+		margin:10px 0;
+		select {
+			max-width: 45%;
+		}
+		input {
+			max-width: 45%;
+		}
+	}
+	&__separator {
+		padding:20px 0;
+		h1 {
+			font-size:4em;
+		}
+	}
+}
