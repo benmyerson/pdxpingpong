@@ -1,4 +1,21 @@
 <div>
 	<h1>Game</h1>
+	<form>
+		<div>
+			<label>Player1:</label>
+			<select ng-model="game.player1Obj" ng-options="player.name disable when (player == game.newGame.player2) for player in game.players">
+				<option value="">Choose Player 1</option>
+			</select>
+			<input ng-model="game.newGame.player1Score" type="number" />
+		</div>
+		<div>
+			<label>Player2:</label>
+			<select ng-model="game.player2Obj" ng-options="player.name disable when (player == game.newGame.player1) for player in game.players">
+				<option value="">Choose Player 2</option>
+			</select>
+			<input ng-model="game.newGame.player2Score" type="number" />
+		</div>
 
+		<button ng-click="game.completeGame()">Complete Game</button>
+	</form>
 </div>

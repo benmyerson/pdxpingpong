@@ -18,8 +18,7 @@ Parse.Cloud.afterSave("Game", function(request) {
 
     winnerQ.get(winner.id, {
         success: function(player) {
-            console.log("got winner player");
-            console.log(player);
+
             player.increment("games");
             player.increment("wins");
             player.increment("totalPoints", winnerPoints);
@@ -39,8 +38,7 @@ Parse.Cloud.afterSave("Game", function(request) {
     var loserQ = new Parse.Query(Player);
     loserQ.get(loser.id, {
         success: function(player) {
-            console.log("got loser player");
-            console.log(player);
+            
             player.increment("games");
             player.increment("losses");
             player.increment("totalPoints", loserPoints);

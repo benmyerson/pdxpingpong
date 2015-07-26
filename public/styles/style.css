@@ -35,6 +35,21 @@ body {
   -webkit-overflow-scrolling: touch;
   cursor: default;
 }
+input {
+  color: #ffffff;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #444444;
+}
+button {
+  border: 0;
+  outline: none;
+  color: #ffffff;
+  background: #00aeef;
+}
+button[disabled] {
+  background: #444444;
+}
 
 
 .LeaderBoard {
