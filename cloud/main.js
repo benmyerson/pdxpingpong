@@ -2,9 +2,8 @@ var _ = require('underscore');
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
 Parse.Cloud.define("hello", function(request, response) {
-  response.success("Hello world!");
+    response.success("Hello world!");
 });
-
 
 Parse.Cloud.afterSave("Game", function(request) {
     var game = request.object;
@@ -25,7 +24,7 @@ Parse.Cloud.afterSave("Game", function(request) {
             player.increment("opponentTotalPoints", loserPoints);
             var winPerc = player.get("wins") / player.get("games");
             var ppG = player.get("totalPoints") / player.get("games");
-            var oppG = player.get("opponetTotalPoints") / player.get("games");
+            var oppG = player.get("opponentTotalPoints") / player.get("games");
             player.set("winPercentage", winPerc);
             player.set("pointsPerGame", ppG);
             player.set("opponentPointsPerGame", oppG);
@@ -45,7 +44,7 @@ Parse.Cloud.afterSave("Game", function(request) {
             player.increment("opponentTotalPoints", winnerPoints);
             var winPerc = player.get("wins") / player.get("games");
             var ppG = player.get("totalPoints") / player.get("games");
-            var oppG = player.get("opponetTotalPoints") / player.get("games");
+            var oppG = player.get("opponentTotalPoints") / player.get("games");
             player.set("winPercentage", winPerc);
             player.set("pointsPerGame", ppG);
             player.set("opponentPointsPerGame", oppG);
