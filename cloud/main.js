@@ -2,9 +2,8 @@ var _ = require('underscore');
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
 Parse.Cloud.define("hello", function(request, response) {
-  response.success("Hello world!");
+    response.success("Hello world!");
 });
-
 
 Parse.Cloud.afterSave("Game", function(request) {
     var game = request.object;
@@ -18,15 +17,14 @@ Parse.Cloud.afterSave("Game", function(request) {
 
     winnerQ.get(winner.id, {
         success: function(player) {
-            console.log("got winner player");
-            console.log(player);
+
             player.increment("games");
             player.increment("wins");
             player.increment("totalPoints", winnerPoints);
             player.increment("opponentTotalPoints", loserPoints);
             var winPerc = player.get("wins") / player.get("games");
             var ppG = player.get("totalPoints") / player.get("games");
-            var oppG = player.get("opponetTotalPoints") / player.get("games");
+            var oppG = player.get("opponentTotalPoints") / player.get("games");
             player.set("winPercentage", winPerc);
             player.set("pointsPerGame", ppG);
             player.set("opponentPointsPerGame", oppG);
@@ -39,15 +37,14 @@ Parse.Cloud.afterSave("Game", function(request) {
     var loserQ = new Parse.Query(Player);
     loserQ.get(loser.id, {
         success: function(player) {
-            console.log("got loser player");
-            console.log(player);
+            
             player.increment("games");
             player.increment("losses");
             player.increment("totalPoints", loserPoints);
             player.increment("opponentTotalPoints", winnerPoints);
             var winPerc = player.get("wins") / player.get("games");
             var ppG = player.get("totalPoints") / player.get("games");
-            var oppG = player.get("opponetTotalPoints") / player.get("games");
+            var oppG = player.get("opponentTotalPoints") / player.get("games");
             player.set("winPercentage", winPerc);
             player.set("pointsPerGame", ppG);
             player.set("opponentPointsPerGame", oppG);

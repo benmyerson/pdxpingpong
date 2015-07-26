@@ -17,7 +17,7 @@ angular.module('pdxPingPong', ['ngRoute'])
 	                players: function(ParseService) {
 	                    return ParseService.Player.get({
 	                        params: {
-	                            order: "-wins",
+	                            order: "-winPercentage",
 	                            limit: 20
 	                        }
 	                    });
@@ -27,7 +27,12 @@ angular.module('pdxPingPong', ['ngRoute'])
 	        })
 	        .when('/game', {
 	            controller: 'GameController as game',
-	            templateUrl: 'views/game/game.html'
+	            templateUrl: 'views/game/game.html',
+	            resolve: {
+	                players: function(ParseService) {
+	                    return ParseService.Player.get({params: { order: "name"}});
+	                }
+	            }
 
 	        });
 	})
@@ -58,8 +63,20 @@ angular.module('pdxPingPong', ['ngRoute'])
         };
     })
 
-	.controller('GameController', function() {
+	.controller('GameController', function($location, ParseService, players) {
+		this.players = players;
+		this.newGame = {};
+		this.currentSeason = "Summer League";
 
+		this.completeGame = function  () {
+			this.newGame.player1 = ParseService.objToPointer(this.player1Obj, "Player");
+			this.newGame.player2 = ParseService.objToPointer(this.player2Obj, "Player");
+
+			var test = ParseService.Game.post(this.newGame);
+
+			this.newGame=this.player1Obj=this.player2Obj = {};
+			$location.path('leaderboard');
+		};
 	})
 
 	.factory('ParseService', function(Resource) {
@@ -78,7 +95,14 @@ angular.module('pdxPingPong', ['ngRoute'])
 
 	    return {
 	        Game: resource('classes/Game/:objectId'),
-	        Player: resource('classes/Player/:objectId')
+	        Player: resource('classes/Player/:objectId'),
+	        objToPointer: function (object, className) {
+	        	return {
+	        		"__type":"Pointer",
+	        		"className":className,
+	        		"objectId":object.objectId
+	        	}
+    	   	}
 	    };
 	})
 
