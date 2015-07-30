@@ -12,7 +12,14 @@
         (function() {
             // Load them fonts
             try {
-                Typekit.load();
+                Typekit.load({
+                    active: function() {
+                        window.fontsLoaded = true;
+                        window.dispatchEvent(
+                            new Event('fonts.loaded')
+                        );
+                    }
+                });
             } catch (e) {}
 
             // Copyright 2014-2015 Twitter, Inc.
