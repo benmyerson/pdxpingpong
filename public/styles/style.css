@@ -24,13 +24,15 @@ body {
   padding: 0;
 }
 html {
+  font-size: 100%;
   min-width: 320px;
   box-sizing: border-box;
   background-color: #1f1f1f;
+  overflow-x: hidden;
 }
 body {
   color: #ffffff;
-  font: 400 16px/1.42 "proxima-nova", "Helvetica Neue", Helvetica, "Open Sans", Arial, sans-serif;
+  font: 400 1em/1.5 "proxima-nova", "Helvetica Neue", Helvetica, "Open Sans", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-overflow-scrolling: touch;
   cursor: default;
@@ -100,6 +102,78 @@ button[disabled] {
   width: 100%;
   margin: 30px 0;
 }
+@media screen and (max-width: 767px) {
+  html {
+    font-size: 75%;
+  }
+}
+.Season {
+  padding: 2em;
+  text-align: center;
+}
+.Season:before,
+.Season:after {
+  content: " ";
+  display: table;
+}
+.Season:after {
+  clear: both;
+}
+.Season__brand {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+.Season__brand-wrapper {
+  width: 150px;
+  margin: 0 auto;
+  display: block;
+  outline: none;
+}
+.Season__league,
+.Season__points,
+.Season__games {
+  text-transform: uppercase;
+}
+.Season__league small,
+.Season__points small,
+.Season__games small {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #444444;
+  display: block;
+}
+.Season__league {
+  margin-top: 1.66rem;
+  font: 600 2em/1.2 "proxima-nova";
+}
+.Season__points,
+.Season__games {
+  margin-top: 1rem;
+  display: inline-block;
+  font: 600 4em/1.1 "proxima-nova";
+}
+.Season__points {
+  padding-right: 2rem;
+  position: relative;
+}
+.Season__points::after {
+  content: "";
+  right: 0;
+  bottom: 0;
+  width: 2px;
+  height: 85%;
+  position: absolute;
+  background-color: #2d2d2d;
+  border-radius: 1px;
+}
+.Season__games {
+  padding-left: 2rem;
+}
+.Viewport {
+  min-height: 0.01%;
+  overflow-x: auto;
+}
 
 .NewGame {
   text-align: center;
@@ -142,55 +216,46 @@ button[disabled] {
   font-size: 4em;
 }
 
-.LeaderBoard {
-  width: auto;
-  max-width: 1200px;
-  margin: 0 auto;
-}
 .PlayerStats {
   padding: 1em;
-  font: 800 24px/1.5 "proxima-nova";
+  font: 800 1.5em/1.5 "proxima-nova";
   text-transform: uppercase;
 }
 .PlayerStats__rank,
 .PlayerStats__name,
-.PlayerStats__stats {
+.PlayerStats__stat {
+  padding: 1em;
   border: 1px solid #2d2d2d;
+}
+.PlayerStats__rank small,
+.PlayerStats__name small,
+.PlayerStats__stat small {
+  font-size: 0.66em;
+  font-weight: 600;
+  color: #444444;
+  display: block;
 }
 .PlayerStats__rank {
   width: 1%;
   border-left: none;
 }
 .PlayerStats__name {
-  width: 35%;
-  max-width: 100px;
+  min-width: 38%;
+  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.PlayerStats__stats {
-  border-right: 0;
+.PlayerStats__stat {
+  border-width: 1px 0;
+  padding-left: 0.375em;
+  padding-right: 0.375em;
 }
-.PlayerStats td {
-  padding: 1em;
+.PlayerStats__stat--first {
+  padding-left: 1em;
 }
-.PlayerStats td small {
-  font-size: 16px;
-  font-weight: 600;
-  color: #444444;
-  display: block;
-}
-.PlayerStats td td {
+.PlayerStats__stat--last {
   width: 1%;
-  padding: 0 0.33em;
-}
-.PlayerStats td td:first-child {
-  padding-left: 0;
-}
-.PlayerStats td td:last-child {
-  padding-right: 0;
-}
-.PlayerStats td td small {
-  font-size: 14px;
+  padding-right: 1em;
 }
 

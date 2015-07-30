@@ -1,4 +1,4 @@
-angular.module('pdxPingPong', ['ngRoute', 'fittext'])
+angular.module('pdxPingPong', ['ngRoute'])
 
 	.config(function($compileProvider) {
 		$compileProvider.debugInfoEnabled(false);
