@@ -72,10 +72,12 @@ angular.module('pdxPingPong', ['ngRoute'])
 			this.newGame.player1 = ParseService.objToPointer(this.player1Obj, "Player");
 			this.newGame.player2 = ParseService.objToPointer(this.player2Obj, "Player");
 
-			var test = ParseService.Game.post(this.newGame);
+			var test = ParseService.Game.post(this.newGame)
+                .then(function ( ){
+                    this.newGame=this.player1Obj=this.player2Obj = {};
+                    $location.path('leaderboard');
+                });
 
-			this.newGame=this.player1Obj=this.player2Obj = {};
-			$location.path('leaderboard');
 		};
 	})
 
