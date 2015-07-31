@@ -12,7 +12,14 @@
         (function() {
             // Load them fonts
             try {
-                Typekit.load();
+                Typekit.load({
+                    active: function() {
+                        window.fontsLoaded = true;
+                        window.dispatchEvent(
+                            new Event('fonts.loaded')
+                        );
+                    }
+                });
             } catch (e) {}
 
             // Copyright 2014-2015 Twitter, Inc.
@@ -30,9 +37,30 @@
     </script>
 </head>
 <body>
-    <div ng-view>
 
-    </div>
+    <header class="Season">
+
+        <a href="#/" class="Season__brand-wrapper">
+            <img class="Season__brand" src="logo.png">
+        </a>
+
+        <div class="Season__league">
+            <div>summer league</div>
+            <small>current season</small>
+        </div>
+
+        <div class="Season__points">
+            <div>{{31235 | number}}</div>
+            <small>total points</small>
+        </div><!--
+
+     --><div class="Season__games">
+            <div>289</div>
+            <small>total games</small>
+        </div>
+
+    </header>
+    <div class="Viewport" ng-view></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.js"></script>
     <script src="scripts/app.js"></script>

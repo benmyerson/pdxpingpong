@@ -1,21 +1,22 @@
 @import "../vars";
 
-.LeaderBoard {
-    // This will be full width at some point
-    width: auto;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
 .PlayerStats {
     padding: 1em;
-    font: 800 24px/1.5 "proxima-nova";
+    font: 800 1.5em/1.5 "proxima-nova";
     text-transform: uppercase;
 
     &__rank,
     &__name,
-    &__stats {
-        border: 1px solid #2d2d2d;
+    &__stat {
+        padding: 1em;
+        border: 1px solid @border-color;
+
+        small {
+            font-size: 0.66em;
+            font-weight: 600;
+            color: @text-gray;
+            display: block;
+        }
     }
 
     &__rank {
@@ -24,42 +25,26 @@
     }
 
     &__name {
-        width: 35%;
-        max-width: 100px;
+        min-width: 38%;
+        max-width: 140px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    &__stats {
-        border-right: 0;
-    }
+    &__stat {
+        border-width: 1px 0;
+        padding-left: 0.375em;
+        padding-right: 0.375em;
 
-    td {
-        padding: 1em;
-
-        small {
-            font-size: 16px;
-            font-weight: 600;
-            color: @text-gray;
-            display: block;
+        &--first {
+            padding-left: 1em;
         }
 
-        td {
+        &--last {
             width: 1%;
-            padding: 0 0.33em;
-
-            &:first-child {
-                padding-left: 0;
-            }
-
-            &:last-child {
-                padding-right: 0;
-            }
-
-            small {
-                font-size: 14px;
-            }
+            padding-right: 1em;
         }
+
     }
 }
