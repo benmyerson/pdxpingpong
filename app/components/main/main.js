@@ -1,0 +1,3 @@
+pongApp.controller('MainController', function() {
+
+});
