@@ -8,3 +8,6 @@ logs
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
+
+public
+app/components/views.js
