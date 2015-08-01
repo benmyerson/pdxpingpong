@@ -1,6 +1,4 @@
-angular.module('fittext', [])
-
-.directive('fittext', function() {
+pongApp.directive('fittext', function() {
     return {
         restrict: 'A',
         link: function($scope, element, attrs) {
