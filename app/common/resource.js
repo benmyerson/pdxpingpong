@@ -58,7 +58,8 @@ pongApp.factory('Resource', function($http) {
                 params: params,
                 headers: headers
             }).then(function(response) {
-                return response.data.results;
+                var data = response.data;
+                return 'results' in data ? data.results : data;
             });
         };
     });
