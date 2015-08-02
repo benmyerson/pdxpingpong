@@ -43,7 +43,8 @@ pongApp.factory('relay', function() {
             }
 
             function eventHandler(snap) {
-                var val = snap.val();
+                var val = snap.val(),
+                    id = val.id;
 
                 // note: right now we're receiving notifications
                 // for all events. WebSockets are pretty light
@@ -55,9 +56,9 @@ pongApp.factory('relay', function() {
                     // If we're handling an event and the most recent publish
                     // time is === now, it's safe to say we triggered it - force async.
                     if (pubTime === Date.now()) {
-                        setTimeout(fn, 0, val);
+                        setTimeout(fn, 0, id);
                     } else {
-                        fn(val);
+                        fn(id);
                     }
                 }
             }
