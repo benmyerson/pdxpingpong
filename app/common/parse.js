@@ -15,6 +15,7 @@ pongApp.factory('ParseService', function(Resource) {
     return {
         Game: resource('classes/Game/:objectId'),
         Player: resource('classes/Player/:objectId'),
+        Fn: resource('functions/:name'),
         objToPointer: function(object, className) {
             return {
                 "__type": "Pointer",
