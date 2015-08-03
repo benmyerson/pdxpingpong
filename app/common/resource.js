@@ -59,7 +59,20 @@ pongApp.factory('Resource', function($http) {
                 headers: headers
             }).then(function(response) {
                 var data = response.data;
-                return 'results' in data ? data.results : data;
+
+                // Parse /1/function/<name> result
+                if ('object' == typeof data.result) {
+                    return data.result;
+                }
+                // Parse /1/classes/<name> results
+                else if (Array.isArray(data.results)) {
+                    return data.results;
+                }
+
+                // So far, Parse calls to create objects have returned
+                // plain objects as the result without burying the data
+                // within `result[s]` properties
+                return data;
             });
         };
     });
