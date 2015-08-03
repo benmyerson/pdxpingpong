@@ -1,4 +1,4 @@
-pongApp.controller('GameController', function($location, ParseService, players) {
+pongApp.controller('GameController', function($location, ParseService, players, relay) {
     this.players = players;
     this.newGame = {};
     this.currentSeason = "Summer League";
@@ -7,9 +7,13 @@ pongApp.controller('GameController', function($location, ParseService, players) 
         this.newGame.player1 = ParseService.objToPointer(this.player1Obj, "Player");
         this.newGame.player2 = ParseService.objToPointer(this.player2Obj, "Player");
 
-        var test = ParseService.Game.post(this.newGame);
+        ParseService.Game.post(this.newGame).then(function(game) {
+            // notify the app of the change
+            relay.$pub('game.create', game.objectId);
+            // switch to leaderboard
+            $location.path('leaderboard');
+        });
 
-        this.newGame = this.player1Obj = this.player2Obj = {};
-        $location.path('leaderboard');
+        this.newGame = this.player1Obj = this.player2Obj = null;
     };
 });
