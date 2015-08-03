@@ -15,35 +15,39 @@ Parse.Cloud.define("mainStats", function(request, response) {
     var Game = Parse.Object.extend("Game");
     var query = new Parse.Query(Game);
 
-    query.descending("createdAt");
+    function getGameWinner(game) {
+        return game.get('player1Score') >
+               game.get('player2Score') ?
+                  game.get('player1') :
+                  game.get('player2');
+    }
 
-    query.find({
-        success: function (results) {
-            console.log(results);
-            ret.totalGames = results.length;
-            ret.lastGame = results[0];
+    // cannot iterate on a query with sort, skip, or limit :/
+    // query.descending("createdAt");
 
-            var winner = lastGame.player1Score > lastGame.player2Score ? lastGame.player1 : lastGame.player2;
-            for (var i = 0; i < results.length; i++) {
-                ret.totalPoints += results[i].player1Score + results[i].player2Score;
-                if (winner !== null) {
-                    var currGameWinner = results[i].player1Score > results[i].player2Score ? results[i].player1 : results[i].player2;
-                    if (winner === currGameWinner) {
-                        ret.winnerStreak ++;
-                    }else {
-                        winner = null;
-                    }
-                }
-            }
+    var last;
+    query.each(function(game) {
+        var player1Score = game.get('player1Score'),
+            player2Score = game.get('player2Score'),
+            lastWinner = getGameWinner(last || game),
+            winner = getGameWinner(game);
+
+        ret.totalGames += 1;
+        ret.totalPoints += player1Score + player2Score;
+
+        if (last && lastWinner.id === winner.id) {
+            ret.winnerStreak += 1;
+        }
+
+        last = game;
+    }, {
+        success: function() {
+            response.success(ret);
         },
-        error: function (error) {
-            console.log("Error!!");
-            console.log(error);
+        error: function(error) {
+            response.error(error);
         }
     });
-
-    response.success(ret);
-
 });
 
 Parse.Cloud.afterSave("Game", function(request) {
