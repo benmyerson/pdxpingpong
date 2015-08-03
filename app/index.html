@@ -37,29 +37,7 @@
     </script>
 </head>
 <body>
-
-    <header class="Season">
-
-        <a href="#/" class="Season__brand-wrapper">
-            <img class="Season__brand" src="images/logo.png">
-        </a>
-
-        <div class="Season__league">
-            <div>summer league</div>
-            <small>current season</small>
-        </div>
-
-        <div class="Season__points">
-            <div>{{31235 | number}}</div>
-            <small>total points</small>
-        </div><!--
-
-     --><div class="Season__games">
-            <div>289</div>
-            <small>total games</small>
-        </div>
-
-    </header>
+    <div ng-include="'views/season/season.html'"></div>
     <div class="Viewport" ng-view></div>
     <script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.js"></script>

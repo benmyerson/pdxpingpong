@@ -1,0 +1,22 @@
+<header class="Season" ng-controller="SeasonController as vm">
+
+    <a href="#/" class="Season__brand-wrapper">
+        <img class="Season__brand" src="images/logo.png">
+    </a>
+
+    <div class="Season__league">
+        <div>{{vm.season}}</div>
+        <small>current season</small>
+    </div>
+
+    <div class="Season__points">
+        <div>{{vm.points | number}}</div>
+        <small>total points</small>
+    </div><!--
+
+ --><div class="Season__games">
+        <div>{{vm.games || '...'}}</div>
+        <small>total games</small>
+    </div>
+
+</header>
