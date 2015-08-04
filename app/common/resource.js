@@ -55,7 +55,8 @@ pongApp.factory('Resource', function($q, $http) {
         _makeRequest: function(type, data, config) {
             var method = this.config.method || type,
                 headers = popKey(config, 'headers'),
-                params;
+                params,
+                url;
 
             if (acceptsData(method)) {
                 params = popKey(data, 'params');
