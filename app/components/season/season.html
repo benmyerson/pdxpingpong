@@ -19,4 +19,16 @@
         <small>total games</small>
     </div>
 
+    <div ng-if="vm.lastGame" class="Season__last-game">
+        <h1>Last Game</h1>
+        <div class="Season__last-game__player" ng-class="{'Season__last-game__player--winner': vm.lastGame.player1.streak > 0}">
+            {{vm.lastGame.player1.name}} ({{vm.lastGame.player1Score}}) 
+            <span>{{vm.lastGame.player1.streak}}</span>
+        </div>
+        <div class="Season__last-game__player" ng-class="{'Season__last-game__player--winner': vm.lastGame.player2.streak > 0}">
+            {{vm.lastGame.player2.name}} ({{vm.lastGame.player2Score}})
+            <span>{{vm.lastGame.player2.streak}}</span>
+        </div>
+
+    </div>
 </header>

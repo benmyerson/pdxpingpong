@@ -1,48 +1,53 @@
 var _ = require('underscore');
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
-Parse.Cloud.define("hello", function(request, response) {
-    response.success("Hello world!");
-});
+var getGameWinner = function getGameWinner(game) {
+    return game.get('player1Score') >
+               game.get('player2Score') ?
+                  game.get('player1') :
+                  game.get('player2');
+}
+
+var getGameLoser = function getGameLoser(game) {
+    return game.get('player1Score') <
+                game.get('player2Score') ?
+                    game.get('player1') :
+                    game.get('player2');
+}
 
 Parse.Cloud.define("mainStats", function(request, response) {
     var ret = {
         totalPoints: 0,
         totalGames: 0,
-        lastGame: {},
-        winnerStreak: 0
+        lastGame: {}
     };
     var Game = Parse.Object.extend("Game");
     var query = new Parse.Query(Game);
 
-    function getGameWinner(game) {
-        return game.get('player1Score') >
-               game.get('player2Score') ?
-                  game.get('player1') :
-                  game.get('player2');
-    }
-
     // cannot iterate on a query with sort, skip, or limit :/
     // query.descending("createdAt");
 
-    var last;
     query.each(function(game) {
         var player1Score = game.get('player1Score'),
-            player2Score = game.get('player2Score'),
-            lastWinner = getGameWinner(last || game),
-            winner = getGameWinner(game);
+            player2Score = game.get('player2Score');
 
         ret.totalGames += 1;
         ret.totalPoints += player1Score + player2Score;
 
-        if (last && lastWinner.id === winner.id) {
-            ret.winnerStreak += 1;
-        }
-
-        last = game;
     }, {
         success: function() {
-            response.success(ret);
+            query = new Parse.Query(Game);
+            query.include("player1")
+                .include("player2")
+                .descending("createdAt")
+                .first()
+                .then(function (game) {
+                    ret.lastGame = game;
+                    response.success(ret);
+                },
+                function (error) {
+                    response.error(error)
+                });
         },
         error: function(error) {
             response.error(error);
@@ -73,6 +78,12 @@ Parse.Cloud.afterSave("Game", function(request) {
             player.set("winPercentage", winPerc);
             player.set("pointsPerGame", ppG);
             player.set("opponentPointsPerGame", oppG);
+
+            if (player.get("streak") > 0){
+                player.increment("streak");
+            } else {
+                player.set("streak", 1);
+            }
             player.save();
         },
         error: function () {
@@ -93,6 +104,13 @@ Parse.Cloud.afterSave("Game", function(request) {
             player.set("winPercentage", winPerc);
             player.set("pointsPerGame", ppG);
             player.set("opponentPointsPerGame", oppG);
+            console.log("loser streak" + player.get("streak"));
+            if (player.get("streak") < 0){
+                player.increment("streak", -1);
+            } else {
+                player.set("streak", -1);
+            }
+
             player.save();
         },
         error: function () {

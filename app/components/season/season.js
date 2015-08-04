@@ -3,6 +3,7 @@ pongApp.controller('SeasonController', function($scope, relay, ParseService) {
 
     vm.games = 0;
     vm.points = 0;
+    vm.lastGame = null;
     vm.season = 'summer league';
 
     // Initial stats
@@ -11,6 +12,7 @@ pongApp.controller('SeasonController', function($scope, relay, ParseService) {
     }).then(function(stats) {
         vm.games = stats.totalGames;
         vm.points = stats.totalPoints;
+        vm.lastGame = stats.lastGame;
     });
 
     // Live stats
@@ -20,11 +22,12 @@ pongApp.controller('SeasonController', function($scope, relay, ParseService) {
                 limit: 1,
                 where: {
                     objectId: id
-                }
+                },
+                include: 'player1,player2'
             }
         }).then(function(game) {
             game = game[0];
-
+            vm.lastGame = game;
             vm.games += 1;
             vm.points += (game.player1Score + game.player2Score);
         });
