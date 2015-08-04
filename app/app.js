@@ -16,10 +16,8 @@ pongApp.config(function($routeProvider) {
             resolve: {
                 players: function(ParseService) {
                     return ParseService.Player.get({
-                        params: {
-                            order: "-winPercentage",
-                            limit: 20
-                        }
+                        order: "-winPercentage",
+                        limit: 20
                     });
                 }
             }
@@ -31,9 +29,7 @@ pongApp.config(function($routeProvider) {
             resolve: {
                 players: function(ParseService) {
                     return ParseService.Player.get({
-                        params: {
-                            order: "name"
-                        }
+                        order: "name"
                     });
                 }
             }

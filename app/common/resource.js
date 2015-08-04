@@ -1,79 +1,120 @@
-pongApp.factory('Resource', function($http) {
-    var
-    // Matches param placeholders in a url of the form, e.g.
-    // `rest/peoples/:id` where `id` is the param
-        param_re = /:([a-z]\w*)/g,
-
-        // Matches repeating slashes, except for those following a `:`
+pongApp.factory('Resource', function($q, $http) {
+    var param_re = /:([a-z]\w*)/g,
         slashes_re = /(^|[^:])\/{2,}/g,
-        buildUrl,
-        popKey;
+        trailing_slash_re = /\/$/,
+        copy = angular.copy,
+        extend = angular.extend,
+        httpMethods = 'get delete head jsonp put post patch';
 
-    buildUrl = function(url, data) {
+    function acceptsData(method) {
+        return /^(put|post|patch)$/i.test(method);
+    }
+
+    function interpolateUrl(url, data, params) {
         // Replace url labels with an actual value, or remove
         // it when no value is present
         url = url.replace(param_re, function(_, key) {
-            var val = popKey(data, key);
+            var val = popFirstKey(data, params, key);
             return 'undefined' === typeof val ? '' : val;
         });
 
         // Strip repeating slashes
         url = url.replace(slashes_re, '$1/');
         // Strip trailing slashes
-        url = url.replace(/\/$/, '');
+        url = url.replace(trailing_slash_re, '');
 
         return url;
-    };
+    }
 
     // Get a value at `key` from the first object it
     // shows up in, then remove that property from the object
-    popKey = function(obj, key) {
-        var val;
-        if (key in obj) {
-            val = obj[key];
-            delete obj[key];
+    function popFirstKey() {
+        var objects = Array.prototype.slice.call(arguments),
+            key = objects.pop(),
+            obj;
+        while ((obj = objects.shift())) {
+            if (obj && obj.hasOwnProperty(key)) {
+                return popKey(obj, key);
+            }
         }
+    }
+
+    function popKey(obj, key) {
+        var val = obj[key];
+        delete obj[key];
         return val;
-    };
+    }
 
     function ResourceLite(url, config) {
         this.url = url;
         this.config = config || {};
     }
 
-    ['get', 'put', 'post', 'delete'].forEach(function(method) {
-        ResourceLite.prototype[method] = function(data) {
-            var headers = this.config.headers,
+    extend(ResourceLite.prototype, {
+
+        _makeRequest: function(type, data, config) {
+            var method = this.config.method || type,
+                headers = popKey(config, 'headers'),
                 params,
                 url;
 
-            data = angular.extend({}, data);
-            params = angular.extend({}, popKey(data, 'params'));
-            url = buildUrl(this.url, data);
+            if (acceptsData(method)) {
+                params = popKey(data, 'params');
+            } else {
+                params = data;
+                data = null;
+            }
 
-            return $http({
+            url = interpolateUrl(this.url, data, params);
+            headers = extend({}, this.config.headers, headers);
+
+            return $http(extend(config, {
                 method: method,
                 url: url,
                 data: data,
                 params: params,
                 headers: headers
-            }).then(function(response) {
-                var data = response.data;
+            }));
+        },
 
-                // Parse /1/function/<name> result
-                if ('object' == typeof data.result) {
-                    return data.result;
-                }
-                // Parse /1/classes/<name> results
-                else if (Array.isArray(data.results)) {
-                    return data.results;
-                }
-
-                // So far, Parse calls to create objects have returned
-                // plain objects as the result without burying the data
-                // within `result[s]` properties
-                return data;
+        before: function(methods, fn) {
+            var self = this;
+            if (!fn) {
+                fn = methods;
+                methods = httpMethods;
+            }
+            angular.forEach(methods.split(' '), function(method) {
+                var original = self[method];
+                self[method] = function beforeOriginal() {
+                    fn.apply(self, arguments);
+                    return original.apply(self, arguments);
+                };
             });
+            return self;
+        },
+
+        after: function(methods, fn) {
+            var self = this;
+            if (!fn) {
+                fn = methods;
+                methods = httpMethods;
+            }
+            angular.forEach(methods.split(' '), function(method) {
+                var original = self[method];
+                self[method] = function afterOriginal() {
+                    return original.apply(self, arguments).then(function() {
+                        return fn.apply(self, arguments);
+                    });
+                };
+            });
+            return self;
+        }
+
+    });
+
+    httpMethods.split(' ').forEach(function(method) {
+        ResourceLite.prototype[method] = function(data, config) {
+            return this._makeRequest(method, copy(data) || {}, copy(config) || {});
         };
     });
 

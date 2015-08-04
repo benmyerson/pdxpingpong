@@ -6,16 +6,32 @@ pongApp.factory('ParseService', function(Resource) {
             'Content-Type': 'application/json'
         };
 
-    function resource(url) {
+    function parseAPI(url) {
         return Resource(baseUrl + url, {
             headers: headers
+        }).after(function handleResponse(response) {
+            var data = response.data;
+
+            // Parse /1/function/<name> result
+            if ('object' == typeof data.result) {
+                return data.result;
+            }
+            // Parse /1/classes/<name> results
+            else if (Array.isArray(data.results)) {
+                return data.results;
+            }
+
+            // So far, Parse calls to create objects have returned
+            // plain objects as the result without burying the data
+            // within `result[s]` properties
+            return data;
         });
     }
 
     return {
-        Game: resource('classes/Game/:objectId'),
-        Player: resource('classes/Player/:objectId'),
-        Fn: resource('functions/:name'),
+        Game: parseAPI('classes/Game/:objectId'),
+        Player: parseAPI('classes/Player/:objectId'),
+        Fn: parseAPI('functions/:name'),
         objToPointer: function(object, className) {
             return {
                 "__type": "Pointer",
