@@ -18,14 +18,11 @@ pongApp.controller('SeasonController', function($scope, relay, ParseService) {
     // Live stats
     relay.$sub('game.create', function(id) {
         ParseService.Game.get({
-            
-            params: {
-                limit: 1,
-                where: {
-                    objectId: id
-                },
-                include: 'player1,player2'
-            }
+            limit: 1,
+            where: {
+                objectId: id
+            },
+            include: 'player1,player2'
         }).then(function(game) {
             game = game[0];
             vm.lastGame = game;
