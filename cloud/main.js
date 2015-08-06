@@ -191,6 +191,7 @@ function computeEloRating(player, playerRating, opponentRating, playerWon) {
      */
     var K = 40;
     var rating = playerRating + K * (actual - expected);
+    rating = Math.round(rating);
 
     console.log("player rated " + playerRating + " " + (playerWon ? "won" : "lost") + " to player rated " + opponentRating + ". new rating: " + rating);
 
@@ -210,6 +211,7 @@ function computeProvisionalRating(player, playerRating, opponentRating, playerWo
     var delta = playerWon ? 400 : -400;
 
     var rating = (games * playerRating + opponentRating + delta) / (games + 1);
+    rating = Math.round(rating);
 
     console.log("provisional player rated " + playerRating + " " + (playerWon ? "won" : "lost") + " to player rated " + opponentRating + " after " + games + " rated games. new rating: " + rating);
 
