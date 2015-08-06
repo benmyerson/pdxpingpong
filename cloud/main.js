@@ -178,7 +178,10 @@ function computeEloRating(player, playerRating, opponentRating, playerWon) {
     var deltaRating = opponentRating - playerRating;
 
     var ln10over400 = 5.76e-3;
-    var expected = 1 / (1 + Math.exp(ln10over400 * deltaRating));
+    var operand = ln10over400 * deltaRating;
+    var exponent = Math.exp(operand);
+
+    var expected = 1 / (1 + exponent); 
     var actual = playerWon ? 1 : 0;
 
     /*
@@ -187,7 +190,10 @@ function computeEloRating(player, playerRating, opponentRating, playerWon) {
      * players play, each will gain or lose half this amount.
      */
     var K = 40;
-    var rating = rating + K * (actual - expected);
+    var rating = playerRating + K * (actual - expected);
+
+    console.log("player rated " + playerRating + " " + (playerWon ? "won" : "lost") + " to player rated " + opponentRating + ". new rating: " + rating);
+
     player.set("rating", rating);
 }
 
@@ -198,11 +204,15 @@ function computeEloRating(player, playerRating, opponentRating, playerWon) {
  * https://en.wikipedia.org/wiki/Elo_rating_system#Performance_rating
  */
 function computeProvisionalRating(player, playerRating, opponentRating, playerWon) {
-    var games = player.get("ratedGames");
+    // ratedGames has already been incremented here
+    var games = player.get("ratedGames") - 1;
 
     var delta = playerWon ? 400 : -400;
 
     var rating = (games * playerRating + opponentRating + delta) / (games + 1);
+
+    console.log("provisional player rated " + playerRating + " " + (playerWon ? "won" : "lost") + " to player rated " + opponentRating + " after " + games + " rated games. new rating: " + rating);
+
     player.set("rating", rating);
 }
 
