@@ -52,9 +52,8 @@ pongApp.factory('Resource', function($q, $http) {
 
     extend(ResourceLite.prototype, {
 
-        _makeRequest: function(type, data, config) {
-            var method = this.config.method || type,
-                headers = popKey(config, 'headers'),
+        _makeRequest: function(method, data, config) {
+            var headers = popKey(config, 'headers'),
                 params,
                 url;
 
