@@ -168,15 +168,14 @@ Parse.Cloud.afterSave('Player', function(request) {
  * the game outcome and the opponent's rating.
  * https://en.wikipedia.org/wiki/Elo_rating_system#Mathematical_details
  */
-function computeEloRating(player, opponentRating, playerWon) {
+function computeEloRating(player, playerRating, opponentRating, playerWon) {
     /*
      * Assuming 0 points for a loss and 1 for a win, compute the
      * expected (average) score for this player against this
      * opponent.
      */
 
-    var rating = player.get("rating");
-    var deltaRating = opponentRating - rating;
+    var deltaRating = opponentRating - playerRating;
 
     var ln10over400 = 5.76e-3;
     var expected = 1 / (1 + Math.exp(ln10over400 * deltaRating));
@@ -188,7 +187,7 @@ function computeEloRating(player, opponentRating, playerWon) {
      * players play, each will gain or lose half this amount.
      */
     var K = 40;
-    rating += K * (actual - expected);
+    var rating += K * (actual - expected);
     player.set("rating", rating);
 }
 
@@ -198,17 +197,16 @@ function computeEloRating(player, opponentRating, playerWon) {
  * win and -400 for each loss.
  * https://en.wikipedia.org/wiki/Elo_rating_system#Performance_rating
  */
-function computeProvisionalRating(player, opponentRating, playerWon) {
+function computeProvisionalRating(player, playerRating, opponentRating, playerWon) {
     var games = player.get("ratedGames");
-    var rating = player.get("rating");
 
-    var delta = playerWon ? 400 : -400
+    var delta = playerWon ? 400 : -400;
 
-    rating = (games * rating + opponentRating + delta) / (games + 1);
+    var rating = (games * playerRating + opponentRating + delta) / (games + 1);
     player.set("rating", rating);
 }
 
-function updatePlayerRating(player, opponentRating, playerWon) {
+function updatePlayerRating(player, playerRating, opponentRating, playerWon) {
     /*
      * Players are provisional until they complete this many rated
      * games.
@@ -216,9 +214,9 @@ function updatePlayerRating(player, opponentRating, playerWon) {
     var numProvisionalGames = 6;
 
     if (player.get("ratedGames") > numProvisionalGames) {
-        computeEloRating(player, opponentRating, playerWon);
+        computeEloRating(player, playerRating, opponentRating, playerWon);
     } else {
-        computeProvisionalRating(player, opponentRating, playerWon);
+        computeProvisionalRating(player, playerRating, opponentRating, playerWon);
     }
 }
 
@@ -233,6 +231,9 @@ function updatePlayerRatings(winner, loser, game) {
     game.set("player1Rating", player1.get("rating"));
     game.set("player2Rating", player2.get("rating"));
 
-    updatePlayerRating(winner, loser.get("rating"), true);
-    updatePlayerRating(loser, winner.get("rating"), false);
+    var winnerRating = winner.get("rating");
+    var loserRating = loser.get("rating");
+
+    updatePlayerRating(winner, winnerRating, loserRating, true);
+    updatePlayerRating(loser, loserRating, winnerRating, false);
 }
