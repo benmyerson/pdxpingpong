@@ -8,8 +8,6 @@ pongApp.controller('GameController', function($location, ParseService, players, 
         this.newGame.player2 = ParseService.objToPointer(this.player2Obj, "Player");
 
         ParseService.Game.post(this.newGame).then(function(game) {
-            // notify the app of the change
-            relay.$pub('game.create', game.objectId);
             // switch to leaderboard
             $location.path('leaderboard');
         });

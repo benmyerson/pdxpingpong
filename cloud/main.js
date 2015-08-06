@@ -1,5 +1,6 @@
 var _ = require('underscore'),
-    util = require('cloud/util');
+    util = require('cloud/util'),
+    relay = require('cloud/relay');
 
 var getGameWinner = function getGameWinner(game) {
     return game.get('player1Score') >
@@ -13,6 +14,10 @@ var getGameLoser = function getGameLoser(game) {
                 game.get('player2Score') ?
                     game.get('player1') :
                     game.get('player2');
+};
+
+var isNewObject = function isNewObject(o) {
+    return +o.createdAt === +o.updatedAt;
 };
 
 Parse.Cloud.define("mainStats", function(request, response) {
@@ -135,6 +140,26 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
     },
     function(err) {
         response.error(err);
+    });
+});
+
+Parse.Cloud.afterSave('Game', function(request) {
+    var Game = Parse.Object.extend("Game"),
+        gameQuery = new Parse.Query(Game);
+    gameQuery.get(request.object.id).then(function(game) {
+        var gameId = game.id,
+            verb = isNewObject(game) ? 'create' : 'update';
+        relay.publish('game.' + verb, gameId);
+    });
+});
+
+Parse.Cloud.afterSave('Player', function(request) {
+    var Player = Parse.Object.extend("Player"),
+        playerQuery = new Parse.Query(Player);
+    playerQuery.get(request.object.id).then(function(player) {
+        var playerId = player.id,
+            verb = isNewObject(player) ? 'create' : 'update';
+        relay.publish('player.' + verb, playerId);
     });
 });
 
