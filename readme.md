@@ -1,6 +1,9 @@
 ### install
 `npm install`
 
+#### install grunt
+`npm install grunt-cli`
+
 ### build
 `grunt`
 

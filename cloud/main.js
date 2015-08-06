@@ -187,7 +187,7 @@ function computeEloRating(player, playerRating, opponentRating, playerWon) {
      * players play, each will gain or lose half this amount.
      */
     var K = 40;
-    var rating += K * (actual - expected);
+    var rating = rating + K * (actual - expected);
     player.set("rating", rating);
 }
 
