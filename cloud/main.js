@@ -1,19 +1,19 @@
-var _ = require('underscore');
-// Use Parse.Cloud.define to define as many cloud functions as you want.
-// For example:
+var _ = require('underscore'),
+    util = require('cloud/util');
+
 var getGameWinner = function getGameWinner(game) {
     return game.get('player1Score') >
-               game.get('player2Score') ?
-                  game.get('player1') :
-                  game.get('player2');
-}
+                game.get('player2Score') ?
+                    game.get('player1') :
+                    game.get('player2');
+};
 
 var getGameLoser = function getGameLoser(game) {
     return game.get('player1Score') <
                 game.get('player2Score') ?
                     game.get('player1') :
                     game.get('player2');
-}
+};
 
 Parse.Cloud.define("mainStats", function(request, response) {
 
@@ -42,11 +42,11 @@ Parse.Cloud.define("mainStats", function(request, response) {
                 .include("player2")
                 .descending("createdAt")
                 .first()
-                .then(function (game) {
+                .then(function(game) {
                     ret.lastGame = game;
                     response.success(ret);
                 },
-                function (error) {
+                function(error) {
                     response.error(error)
                 });
         },
@@ -58,68 +58,82 @@ Parse.Cloud.define("mainStats", function(request, response) {
 
 Parse.Cloud.beforeSave("Game", function(request, response) {
     var game = request.object;
-    var winner = game.get('player1Score') > game.get('player2Score') ? game.get('player1') : game.get('player2');
-    var winnerPoints = Math.max(game.get('player1Score'),game.get('player2Score'));
-    var loser = winner === game.get('player1') ? game.get('player2') : game.get('player1');
-    var loserPoints = Math.min(game.get('player1Score'),game.get('player2Score'));
+    var winner = getGameWinner(game);
+    var loser = getGameLoser(game);
+    var winnerPoints = Math.max(game.get('player1Score'), game.get('player2Score'));
+    var loserPoints = Math.min(game.get('player1Score'), game.get('player2Score'));
 
     var Player = Parse.Object.extend("Player");
-    var winnerQ = new Parse.Query(Player);
-    var loserQ = new Parse.Query(Player);
-    var winner, loser;
-    winnerQ.get(winner.id).then(function(player) {
-            winner = player;
-            player.increment("games");
-            player.increment("wins");
-            player.increment("totalPoints", winnerPoints);
-            player.increment("ratedGames");
-            player.increment("opponentTotalPoints", loserPoints);
-            var winPerc = player.get("wins") / player.get("games");
-            var ppG = player.get("totalPoints") / player.get("games");
-            var oppG = player.get("opponentTotalPoints") / player.get("games");
-            player.set("winPercentage", winPerc);
-            player.set("pointsPerGame", ppG);
-            player.set("opponentPointsPerGame", oppG);
+    var winnerQuery = new Parse.Query(Player);
+    var loserQuery = new Parse.Query(Player);
 
-            if (player.get("streak") > 0){
-                player.increment("streak");
-            } else {
-                player.set("streak", 1);
-            }
-            return player.save();
-        }
-    ).then(function() {
-        return loserQ.get(loser.id);
-    }).then(function(player) {
-            loser=player;
-            player.increment("games");
-            player.increment("losses");
-            player.increment("totalPoints", loserPoints);
-            player.increment("ratedGames");
-            player.increment("opponentTotalPoints", winnerPoints);
-            var winPerc = player.get("wins") / player.get("games");
-            var ppG = player.get("totalPoints") / player.get("games");
-            var oppG = player.get("opponentTotalPoints") / player.get("games");
-            player.set("winPercentage", winPerc);
-            player.set("pointsPerGame", ppG);
-            player.set("opponentPointsPerGame", oppG);
-            console.log("loser streak" + player.get("streak"));
-            if (player.get("streak") < 0){
-                player.increment("streak", -1);
-            } else {
-                player.set("streak", -1);
-            }
+    // run Player queries in parallel
+    util.Promise.all([
+        winnerQuery.get(winner.id),
+        loserQuery.get(loser.id)
+    ]).spread(function success(winner, loser) {
+        var winPercentage,
+            pointsPerGame,
+            opponentPointsPerGame
 
-           return player.save();
+        /////////////////
+        // Winner updates
+        /////////////////
+
+        winner.increment("games");
+        winner.increment("wins");
+        winner.increment("totalPoints", winnerPoints);
+        winner.increment("ratedGames");
+        winner.increment("opponentTotalPoints", loserPoints);
+
+        winPercentage = winner.get("wins") / winner.get("games");
+        pointsPerGame = winner.get("totalPoints") / winner.get("games");
+        opponentPointsPerGame = winner.get("opponentTotalPoints") / winner.get("games");
+
+        winner.set("winPercentage", winPercentage);
+        winner.set("pointsPerGame", pointsPerGame);
+        winner.set("opponentPointsPerGame", opponentPointsPerGame);
+
+        if (winner.get("streak") > 0) {
+            winner.increment("streak");
+        } else {
+            winner.set("streak", 1);
         }
-    ).then(function () {
+
+        ////////////////
+        // Loser updates
+        ////////////////
+
+        loser.increment("games");
+        loser.increment("losses");
+        loser.increment("totalPoints", loserPoints);
+        loser.increment("ratedGames");
+        loser.increment("opponentTotalPoints", winnerPoints);
+
+        winPercentage = loser.get("wins") / loser.get("games");
+        pointsPerGame = loser.get("totalPoints") / loser.get("games");
+        opponentPointsPerGame = loser.get("opponentTotalPoints") / loser.get("games");
+
+        loser.set("winPercentage", winPercentage);
+        loser.set("pointsPerGame", pointsPerGame);
+        loser.set("opponentPointsPerGame", opponentPointsPerGame);
+
+        if (loser.get("streak") < 0) {
+            loser.increment("streak", -1);
+        } else {
+            loser.set("streak", -1);
+        }
+
+        return [winner, loser]
+    }).spread(function(winner, loser) {
         updatePlayerRatings(winner, loser, game);
+
         winner.save();
         loser.save();
 
-        response.success();
+        response.success(game);
     },
-    function (err) {
+    function(err) {
         response.error(err);
     });
 });
@@ -140,7 +154,7 @@ function computeEloRating(player, opponentRating, playerWon) {
     var deltaRating = opponentRating - rating;
 
     var ln10over400 = 5.76e-3;
-    var expected = 1/(1 + Math.exp(ln10over400 * deltaRating));
+    var expected = 1 / (1 + Math.exp(ln10over400 * deltaRating));
     var actual = playerWon ? 1 : 0;
 
     /*
@@ -165,7 +179,7 @@ function computeProvisionalRating(player, opponentRating, playerWon) {
 
     var delta = playerWon ? 400 : -400
 
-    rating = (games * rating + opponentRating + delta)/(games + 1);
+    rating = (games * rating + opponentRating + delta) / (games + 1);
     player.set("rating", rating);
 }
 
@@ -178,8 +192,7 @@ function updatePlayerRating(player, opponentRating, playerWon) {
 
     if (player.get("ratedGames") > numProvisionalGames) {
         computeEloRating(player, opponentRating, playerWon);
-    }
-    else {
+    } else {
         computeProvisionalRating(player, opponentRating, playerWon);
     }
 }
@@ -194,7 +207,6 @@ function updatePlayerRatings(winner, loser, game) {
     var player2 = game.get("player2");
     game.set("player1Rating", player1.get("rating"));
     game.set("player2Rating", player2.get("rating"));
-    //game.save();
 
     updatePlayerRating(winner, loser.get("rating"), true);
     updatePlayerRating(loser, winner.get("rating"), false);
