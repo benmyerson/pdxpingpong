@@ -131,7 +131,7 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
 
         return [winner, loser]
     }).spread(function(winner, loser) {
-        updatePlayerRatings(winner, loser, game);
+        updatePlayerRatings(winner, loser, winnerPoints, loserPoints, game);
 
         winner.save();
         loser.save();
@@ -238,7 +238,7 @@ function updatePlayerRating(player, playerRating, opponentRating, playerWon) {
     }
 }
 
-function updatePlayerRatings(winner, loser, game) {
+function updatePlayerRatings(winner, loser, winnerScore, loserScore, game) {
     /*
      * For historical purposes, record the rating of each player whenever
      * a game is saved. The rating saved is each player's rating before
@@ -265,4 +265,37 @@ function updatePlayerRatings(winner, loser, game) {
 
     updatePlayerRating(winner, winnerRating, loserRating, true);
     updatePlayerRating(loser, loserRating, winnerRating, false);
+
+    var winnerName = winner.get("name");
+    var loserName = loser.get("name");
+
+    /*
+     * Send a push to anyone who cares.
+     */
+    var body = winnerName + " (" + winnerRating + ") d. " + loserName + " (" + loserRating + ") " + winnerScore + " - " + loserScore;
+    console.log("Sending push to all users: " + body);
+
+    var iosQuery = new Parse.Query(Parse.Installation);
+    iosQuery.equalTo("deviceType", "ios");
+    var androidQuery = new Parse.Query(Parse.Installation);
+    androidQuery.equalTo("deviceType", "android");
+
+    var query = Parse.Query.or(iosQuery, androidQuery);
+
+    Parse.Push.send({
+        where: query,
+        data: {
+            alert: {
+                body: body,
+                title: "New game scored."
+            }
+        }
+    }, {
+        success: function() {
+            console.log("Sent push successfully");
+        },
+        error: function(error) {
+            console.log("Failed to send push" + error);
+        }
+    });
 }
