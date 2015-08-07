@@ -178,10 +178,8 @@ function computeEloRating(player, playerRating, opponentRating, playerWon) {
     var deltaRating = opponentRating - playerRating;
 
     var ln10over400 = 5.76e-3;
-    var operand = ln10over400 * deltaRating;
-    var exponent = Math.exp(operand);
 
-    var expected = 1 / (1 + exponent); 
+    var expected = 1 / (1 + Math.exp(ln10over400 * deltaRating)); 
     var actual = playerWon ? 1 : 0;
 
     /*
