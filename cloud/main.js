@@ -246,8 +246,19 @@ function updatePlayerRatings(winner, loser, game) {
      */
     var player1 = game.get("player1");
     var player2 = game.get("player2");
-    game.set("player1Rating", player1.get("rating"));
-    game.set("player2Rating", player2.get("rating"));
+
+    /*
+     * player1 and player2 are not fully loaded. winner and loser are.
+     * figure out which is which.
+     */
+    player1 = player1.id == winner.id ? winner : loser;
+    player2 = player2.id == winner.id ? winner : loser;
+
+    var player1Rating = player1.get("rating");
+    var player2Rating = player2.get("rating");
+
+    game.set("player1Rating", player1Rating);
+    game.set("player2Rating", player2Rating);
 
     var winnerRating = winner.get("rating");
     var loserRating = loser.get("rating");
