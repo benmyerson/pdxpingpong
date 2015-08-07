@@ -204,9 +204,11 @@ function computeEloRating(player, playerRating, opponentRating, playerWon) {
  * win and -400 for each loss.
  * https://en.wikipedia.org/wiki/Elo_rating_system#Performance_rating
  */
-function computeProvisionalRating(player, playerRating, opponentRating, playerWon) {
+function computeProvisionalRating(player, opponentRating, playerWon) {
     // ratedGames has already been incremented here
     var games = player.get("ratedGames") - 1;
+
+    var playerRating = player.get("provisionalRating");
 
     var delta = playerWon ? 400 : -400;
 
@@ -215,7 +217,7 @@ function computeProvisionalRating(player, playerRating, opponentRating, playerWo
 
     console.log("provisional player rated " + playerRating + " " + (playerWon ? "won" : "lost") + " to player rated " + opponentRating + " after " + games + " rated games. new rating: " + rating);
 
-    player.set("rating", rating);
+    player.set("provisionalRating", rating);
 }
 
 function updatePlayerRating(player, playerRating, opponentRating, playerWon) {
@@ -228,7 +230,11 @@ function updatePlayerRating(player, playerRating, opponentRating, playerWon) {
     if (player.get("ratedGames") > numProvisionalGames) {
         computeEloRating(player, playerRating, opponentRating, playerWon);
     } else {
-        computeProvisionalRating(player, playerRating, opponentRating, playerWon);
+        computeProvisionalRating(player, opponentRating, playerWon);
+    }
+
+    if (player.get("ratedGames") == numProvisionalGames) {
+        player.set("rating", player.get("provisionalRating"));
     }
 }
 
