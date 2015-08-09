@@ -63,27 +63,68 @@
     &__games {
         padding-left: 2rem;
     }
+
+    @media screen and @MQ-desktop {
+        padding: 0;
+
+        &__brand-wrapper {
+            width: auto;
+            max-width: @sidebar-width;
+        }
+
+        &__league,
+        &__points,
+        &__games {
+            margin: 0;
+            display: block;
+        }
+
+        &__league {
+            padding: 2rem 0;
+            font-size: 2.5em;
+        }
+
+        &__points,
+        &__games{
+            padding: 1rem 0 1.5rem;
+            font-size: 5em;
+        }
+
+        &__points {
+
+            &::after {
+                display: none;
+            }
+        }
+    }
+
     &__last-game {
         display:none;
     }
-    @media screen and (min-width: @screen-lg-min) {
-       float:left;
+
+    @media screen and @MQ-desktop {
+
         &__last-game {
-            display:block;
-            font: 600 2em/1.2 "proxima-nova";
+            font: 600 1em/1.2 "proxima-nova";
+            display: block;
+
             &__player {
+
                 span {
-                    display:none;
+                    display: none;
                 }
+
                 &--winner {
                     color:@bbcom-blue;
+
                     span {
                         display:inline-block;
-                        background-color: @bbcom-blue;
-                        color:@text-white;
-                        font-weight:bold;
-                        font-size:0.5em;
+                        text-align: center;
                         vertical-align: middle;
+                        background-color: @bbcom-blue;
+                        color: @text-white;
+                        font-weight: bold;
+                        font-size: 0.66em;
                         border-radius: 2em;
                         height: 2em;
                         width: 2em;
