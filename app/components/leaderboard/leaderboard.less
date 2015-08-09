@@ -2,12 +2,12 @@
 
 .PlayerStats {
     padding: 1em;
-    font: 800 1.5em/1.5 "proxima-nova";
+    font: 800 1.33em/1.5 "proxima-nova";
     text-transform: uppercase;
 
     &__rank,
     &__name,
-    &__stat {
+    &__stats {
         padding: 1em;
         border: 1px solid @border-color;
 
@@ -24,26 +24,39 @@
         border-left: none;
     }
 
-    &__name {
-        min-width: 38%;
-        max-width: 140px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    // &__name {
+    //     min-width: 30%;
+    //     max-width: 140px;
+    //     overflow: hidden;
+    //     text-overflow: ellipsis;
+    //     white-space: nowrap;
+    // }
+
+    &__stats {
+        border-right: none;
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            .clearfix;
+        }
     }
 
     &__stat {
+        float: left;
+        width: 14.285714%;
         border-width: 1px 0;
         padding-left: 0.375em;
         padding-right: 0.375em;
+        white-space: nowrap;
 
         &--first {
-            padding-left: 1em;
+            padding-left: 0;
         }
 
         &--last {
-            width: 1%;
-            padding-right: 1em;
+            padding-right: 0;
         }
 
     }
