@@ -71,7 +71,7 @@ function deviceServiceFactory($root, $window, matchMedia) {
                      * `newVal` and `oldVal` arguments.
                      *
                      */
-                    $root.$emit('device.breakpoint.changed', newVal, oldVal);
+                    $root.$pub('device.breakpoint.changed', newVal, oldVal);
                 }
             );
         }
