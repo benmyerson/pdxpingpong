@@ -8,6 +8,8 @@
 
 @border-color: #2d2d2d;
 
+@sidebar-width: 230px;
+
 //== Media queries breakpoints
 //
 //## Define the breakpoints at which your layout will change, adapting to different screen sizes.
@@ -16,6 +18,7 @@
 @screen-xs:                  480px;
 @screen-xs-min:              @screen-xs;
 @screen-phone:               @screen-xs-min;
+@screen-mobile:              @screen-xs-min;
 
 // Small screen / tablet
 @screen-sm:                  768px;
@@ -31,11 +34,17 @@
 @screen-lg:                  1200px;
 @screen-lg-min:              @screen-lg;
 @screen-lg-desktop:          @screen-lg-min;
+@screen-desktop-wide:        @screen-lg-min;
 
 // So media queries don't overlap when required, provide a maximum
 @screen-xs-max:              (@screen-sm-min - 1);
 @screen-sm-max:              (@screen-md-min - 1);
 @screen-md-max:              (@screen-lg-min - 1);
+
+@MQ-mobile:                  ~"(max-width: @{screen-xs-max})";
+@MQ-tablet:                  ~"(min-width: @{screen-tablet})";
+@MQ-desktop:                 ~"(min-width: @{screen-desktop})";
+@MQ-desktop-wide:            ~"(min-width: @{screen-desktop-wide})";
 
 //== Grid system
 //
