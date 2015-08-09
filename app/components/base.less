@@ -106,8 +106,32 @@ button[disabled] {
 
 @media screen and (max-width: @screen-xs-max) {
     html {
-        font-size: 75%;
+        font-size: 80%;
     }
+}
+
+@media screen and (min-width: @screen-md-min) {
+
+    body {
+        display: -webkit-flex;
+        display:  flex;
+    }
+
+    .Sidebar {
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid @border-color;
+        -webkit-flex: 0 0 @sidebar-width;
+                flex: 0 0 @sidebar-width;
+    }
+
+    .Viewport {
+        height: 100vh;
+        overflow-y: auto;
+        -webkit-flex: 1 0 0;
+                flex: 1 0 0;
+    }
+
 }
 
 .Viewport {
