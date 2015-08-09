@@ -7,7 +7,7 @@
 
     &__rank,
     &__name,
-    &__stats {
+    &__stat {
         padding: 1em;
         border: 1px solid @border-color;
 
@@ -24,14 +24,6 @@
         border-left: none;
     }
 
-    // &__name {
-    //     min-width: 30%;
-    //     max-width: 140px;
-    //     overflow: hidden;
-    //     text-overflow: ellipsis;
-    //     white-space: nowrap;
-    // }
-
     &__stats {
         border-right: none;
 
@@ -44,19 +36,18 @@
     }
 
     &__stat {
-        float: left;
-        width: 14.285714%;
+        width: 8%;
         border-width: 1px 0;
         padding-left: 0.375em;
         padding-right: 0.375em;
-        white-space: nowrap;
 
         &--first {
-            padding-left: 0;
+            padding-left: 1em;
         }
 
         &--last {
-            padding-right: 0;
+            padding-right: 1em;
+            border-right: 0;
         }
 
     }
