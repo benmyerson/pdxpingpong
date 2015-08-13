@@ -32,7 +32,8 @@ pongApp.factory('Resource', function($q, $http) {
         var objects = Array.prototype.slice.call(arguments),
             key = objects.pop(),
             obj;
-        while ((obj = objects.shift())) {
+        while (objects.length) {
+            obj = objects.shift();
             if (obj && obj.hasOwnProperty(key)) {
                 return popKey(obj, key);
             }
