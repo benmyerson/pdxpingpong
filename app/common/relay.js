@@ -2,19 +2,51 @@ pongApp.factory('relay', function() {
     var relay = new Firebase('https://pdxpong.firebaseio.com/relay'),
         events = relay.child('events'),
         pubTime = 0,
-        initTimeStamp;
+        canBeginListening,
+        timeStamp;
 
     // Get a reliable, unique timeStamp that serves as the offset for
     // events we're interested in. Why? We don't care about things
     // that happened in the past. Date.now() *could* be used but I don't
     // feel like fighting with timezones and such.
-    initTimeStamp = new Promise(function(yep) {
+    canBeginListening = new Promise(function(yep) {
         relay.child('ts').transaction(function() {
             return Firebase.ServerValue.TIMESTAMP;
         }, function(err, _, snap) {
-            yep(snap.val());
+            timeStamp = snap.val();
+            yep();
         });
     });
+
+    // As events are handled we need to update the timeStamp
+    // with the most recent events timeStamp to keep future
+    // event registrations from receiving old events...
+    //
+    // Example of the problem:
+    //
+    // Initial timestamp: 1
+    //
+    // $sub('event', fn) for events after timestamp @ 1
+    //   - receive event with initial timestamp + 1
+    //   - receive event with initial timestamp + 2
+    //   - receive event with initial timestamp + 3
+    //
+    // ^ unbind `$sub('event', fn)` due to view change
+    //
+    // ... time passes ... and then
+    //
+    // $sub('event', fn) for events after timestamp @ 1
+    //   * OOPS
+    //   * All the events that were received the first time
+    //   * will be received again because their timestamps
+    //   * are greater than our initial timestamp @ 1
+    //
+    // This fixes that ((needs supreme testing))
+    function updateTimeStamp(ts) {
+        if (ts >= timeStamp) {
+            timeStamp = ts + 1;
+        }
+    }
 
     return {
 
@@ -46,6 +78,10 @@ pongApp.factory('relay', function() {
                 var val = snap.val(),
                     id = val.id;
 
+                // Update timeStamp to prevent receiving old events
+                // in future event registration
+                updateTimeStamp(val.ts);
+
                 // note: right now we're receiving notifications
                 // for all events. WebSockets are pretty light
                 // weight but I'd like to optimize this in the future.
@@ -63,7 +99,7 @@ pongApp.factory('relay', function() {
                 }
             }
 
-            initTimeStamp.then(function(timeStamp) {
+            canBeginListening.then(function() {
                 wasRegistered = true;
 
                 ref = events.
