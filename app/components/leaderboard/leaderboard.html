@@ -2,13 +2,14 @@
 
     <table class="LeaderBoard">
         <tbody>
-            <tr class="PlayerStats" ng-repeat="player in vm.players track by player.objectId">
+            <tr class="PlayerStats" ng-repeat="player in vm.players | orderBy:'-rating' track by player.objectId">
                 <td class="PlayerStats__rank">
                     {{$index + 1 | rank}}
                     <small>rank</small>
                 </td>
                 <td class="PlayerStats__name">
-                    {{player.name}}
+                    {{player.name}} ({{player.rating}})
+
                     <small>bodyspace name</small>
                 </td>
                 <td class="PlayerStats__stat PlayerStats__stat--first">
