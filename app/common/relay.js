@@ -70,9 +70,10 @@ pongApp.factory('relay', function() {
                     // Order by event timestamp ascending
                     orderByChild('ts').
                     // Observe events that occur After our init timeStamp
-                    startAt(timeStamp).
-                    // And listen for events
-                    on('child_added', eventHandler);
+                    startAt(timeStamp);
+
+                // And listen for events
+                ref.on('child_added', eventHandler);
             });
 
             return removalFn;
