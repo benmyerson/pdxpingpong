@@ -2,9 +2,7 @@ var Promise = exports.Promise = Object.create(Parse.Promise);
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
 Promise.all = function all(arr) {
-    return Promise.when(arr.map(function(val) {
-        return Promise.is(val) ? val : Promise.as(val);
-    })).then(function() {
+    return Promise.when(arr).then(function() {
         return Array.prototype.slice.call(arguments);
     });
 }
