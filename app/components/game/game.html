@@ -3,7 +3,7 @@
 	<h2>{{game.currentSeason}}</h2>
 	<form name="newGameForm">
 		<div class="NewGame__form-row">
-			<select ng-required="true" ng-model="game.player1Obj" ng-options="player.name disable when (player == game.newGame.player2) for player in game.players">
+			<select ng-required="true" ng-model="game.player1Obj" ng-options="player.name disable when (player == game.player2Obj) for player in game.players">
 				<option value="">-- Choose Player 1 --</option>
 			</select>
 			<input ng-required="true" ng-model="game.newGame.player1Score" type="number" placeholder="Enter Score" />
@@ -13,7 +13,7 @@
 			<h2>{{game.currentSeason}}</h2>
 		</div>
 		<div class="NewGame__form-row">
-			<select ng-required="true" ng-model="game.player2Obj" ng-options="player.name disable when (player == game.newGame.player1) for player in game.players">
+			<select ng-required="true" ng-model="game.player2Obj" ng-options="player.name disable when (player == game.player1Obj) for player in game.players">
 				<option value="">-- Choose Player 2 --</option>
 			</select>
 			<input ng-required="true" ng-model="game.newGame.player2Score" type="number" placeholder="Enter Score" />
