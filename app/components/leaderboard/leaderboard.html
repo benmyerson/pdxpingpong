@@ -2,7 +2,14 @@
 
     <table class="LeaderBoard">
         <tbody>
-            <tr class="PlayerStats" ng-repeat="player in vm.players | orderBy:'-rating' track by player.objectId">
+            <tr class="PlayerStats"
+                ng-repeat="
+                    player in vm.players
+                    | orderBy: ['-rating','-games']
+                    | limitTo: (device.isJumbotron ? 10 : 20)
+                    track by player.objectId
+                    "
+                >
                 <td class="PlayerStats__rank">
                     {{$index + 1 | rank}}
                     <small>rank</small>
@@ -12,7 +19,7 @@
                     <small>bodyspace name</small>
                 </td>
                 <td class="PlayerStats__stat PlayerStats__stat--first">
-                    {{ player.rating }}
+                    {{ player.rating | number }}
                     <small>rating</small>
                 </td>
                 <td class="PlayerStats__stat">
@@ -35,13 +42,51 @@
                     {{player.totalPoints | number}}
                     <small>points</small>
                 </td>
-                <td class="PlayerStats__stat">
-                    {{player.pointsPerGame | number: 2}}
-                    <small>ppg</small>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="LeaderBoard" ng-if="device.isJumbotron">
+        <tbody>
+            <tr class="PlayerStats"
+                ng-repeat="
+                    player in vm.players
+                    | orderBy: ['-rating','-games']
+                    | limitTo: 10 : 10
+                    track by player.objectId
+                    "
+                >
+                <td class="PlayerStats__rank">
+                    {{$index + 11 | rank}}
+                    <small>rank</small>
                 </td>
-                <td class="PlayerStats__stat PlayerStats__stat--last">
-                    {{player.opponentPointsPerGame | number: 2}}
-                    <small>appg</small>
+                <td class="PlayerStats__name">
+                    {{player.name}}
+                    <small>bodyspace name</small>
+                </td>
+                <td class="PlayerStats__stat PlayerStats__stat--first">
+                    {{ player.rating | number }}
+                    <small>rating</small>
+                </td>
+                <td class="PlayerStats__stat">
+                    {{player.games}}
+                    <small>games</small>
+                </td>
+                <td class="PlayerStats__stat">
+                    {{player.wins}}
+                    <small>win</small>
+                </td>
+                <td class="PlayerStats__stat">
+                    {{player.losses}}
+                    <small>loss</small>
+                </td>
+                <td class="PlayerStats__stat">
+                    {{player.winPercentage | ratio}}
+                    <small>ratio</small>
+                </td>
+                <td class="PlayerStats__stat">
+                    {{player.totalPoints | number}}
+                    <small>points</small>
                 </td>
             </tr>
         </tbody>
