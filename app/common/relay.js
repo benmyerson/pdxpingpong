@@ -92,7 +92,7 @@ pongApp.factory('relay', function() {
                     // argument. For the sake of consistency we shall do the same
                     eventObject = {
                         name: event,
-                        timeStamp: ts
+                        timeStamp: val.ts
                     };
 
                     // Firebase has this nasty habit of firing handlers
