@@ -1,5 +1,12 @@
 var pongApp = angular.module('pdxPingPong', ['ngRoute']);
 
+pongApp.run(function(relay) {
+    relay.$sub('client.reload', function() {
+        // Reload the current page without hitting the cache
+        window.location.reload(true);
+    });
+});
+
 pongApp.config(function($compileProvider) {
     $compileProvider.debugInfoEnabled(false);
 });
