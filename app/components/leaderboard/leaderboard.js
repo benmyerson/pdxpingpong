@@ -8,15 +8,11 @@ pongApp.controller('LeaderboardController', function($scope, ParseService, playe
         }
     }
 
-    var off = relay.$sub('player.update', function(id) {
+    $scope.$sub('player.update', function(event, id) {
         ParseService.Player.get({
             objectId: id
         }).then(function(player) {
             updatePlayer(id, player);
         });
-    });
-
-    $scope.$on('$destroy', function() {
-        off();
     });
 });
