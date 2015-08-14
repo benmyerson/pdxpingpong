@@ -116,4 +116,22 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('default', ['clean', 'copy', 'less', 'ngtemplates', 'concat']);
+
+    grunt.registerTask('reload-clients', 'Reload currently running web apps', function() {
+        var donzo = this.async(),
+            request = require('request');
+
+        request({
+            method: 'post',
+            url: 'https://pdxpong.firebaseio.com/relay/events.json?print=silent',
+            json: true,
+            body: {
+                id: null,
+                ev: 'client.reload',
+                ts: {
+                    '.sv': 'timestamp'
+                }
+            }
+        }, donzo);
+    });
 };
