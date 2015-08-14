@@ -1,4 +1,4 @@
-pongApp.controller('SeasonController', function($scope, relay, ParseService) {
+pongApp.controller('SeasonController', function($scope, ParseService) {
     var vm = this;
 
     vm.games = 0;
@@ -16,7 +16,7 @@ pongApp.controller('SeasonController', function($scope, relay, ParseService) {
     });
 
     // Live stats
-    relay.$sub('game.create', function(id) {
+    $scope.$sub('game.create', function(event, id) {
         ParseService.Game.get({
             limit: 1,
             where: {

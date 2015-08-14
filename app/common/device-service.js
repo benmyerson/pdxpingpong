@@ -13,7 +13,8 @@ function deviceServiceFactory($root, $window, matchMedia) {
             mobile: breakPoint(0, 767),
             tablet: breakPoint(768, 991),
             desktop: breakPoint(992, 1199),
-            desktopWide: breakPoint(1200, Number.MAX_VALUE)
+            desktopWide: breakPoint(1200, 1699),
+            jumbotron: breakPoint(1700, Number.MAX_VALUE)
         },
         mediaQueries = {},
         service = {};
@@ -22,6 +23,7 @@ function deviceServiceFactory($root, $window, matchMedia) {
     mediaQueries.tablet = matchMedia('(min-width: ' + breakPoints.tablet.min + 'px)');
     mediaQueries.desktop = matchMedia('(min-width: ' + breakPoints.desktop.min + 'px)');
     mediaQueries.desktopWide = matchMedia('(min-width: ' + breakPoints.desktopWide.min + 'px)');
+    mediaQueries.jumbotron = matchMedia('(min-width: ' + breakPoints.jumbotron.min + 'px)');
 
     service.mediaQueries = mediaQueries;
 
@@ -34,7 +36,9 @@ function deviceServiceFactory($root, $window, matchMedia) {
     function getDeviceSize() {
         var size = 'mobile';
 
-        if (mediaQueries.desktopWide.matches) {
+        if (mediaQueries.jumbotron.matches) {
+            size = 'jumbotron';
+        } else if (mediaQueries.desktopWide.matches) {
             size = 'desktop-wide';
         } else if (mediaQueries.desktop.matches) {
             size = 'desktop';
@@ -53,6 +57,7 @@ function deviceServiceFactory($root, $window, matchMedia) {
         $root.device['isTablet'] = mediaQueries.tablet.matches;
         $root.device['isDesktop'] = mediaQueries.desktop.matches;
         $root.device['isDesktopWide'] = mediaQueries.desktopWide.matches;
+        $root.device['isJumbotron'] = mediaQueries.jumbotron.matches;
 
         if (newVal !== oldVal) {
 

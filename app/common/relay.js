@@ -76,7 +76,8 @@ pongApp.factory('relay', function() {
 
             function eventHandler(snap) {
                 var val = snap.val(),
-                    id = val.id;
+                    id = val.id,
+                    eventObject;
 
                 // Update timeStamp to prevent receiving old events
                 // in future event registration
@@ -87,14 +88,21 @@ pongApp.factory('relay', function() {
                 // weight but I'd like to optimize this in the future.
                 if (event === val.ev) {
 
+                    // Angular callbacks take an eventObject as the first
+                    // argument. For the sake of consistency we shall do the same
+                    eventObject = {
+                        name: event,
+                        timeStamp: val.ts
+                    };
+
                     // Firebase has this nasty habit of firing handlers
                     // synchronously for events that are triggered locally..
                     // If we're handling an event and the most recent publish
                     // time is === now, it's safe to say we triggered it - force async.
                     if (pubTime === Date.now()) {
-                        setTimeout(fn, 0, id);
+                        setTimeout(fn, 0, eventObject, id);
                     } else {
-                        fn(id);
+                        fn(eventObject, id);
                     }
                 }
             }

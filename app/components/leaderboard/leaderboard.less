@@ -36,7 +36,6 @@
     }
 
     &__stat {
-        width: 8%;
         border-width: 1px 0;
         padding-left: 0.375em;
         padding-right: 0.375em;
@@ -45,10 +44,39 @@
             padding-left: 1em;
         }
 
-        &--last {
+        &:last-child {
             padding-right: 1em;
             border-right: 0;
         }
 
     }
+}
+
+@media screen and @MQ-jumbotron {
+
+    .Viewport {
+        overflow: hidden;
+    }
+
+    .LeaderBoard {
+        width: 50%;
+        float: left;
+
+        &:first-of-type {
+            border-right: 1px solid @border-color;
+        }
+    }
+
+    .PlayerStats {
+
+        &__rank,
+        &__name,
+        &__stat {
+            height: 9.99vh;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+    }
+
 }
