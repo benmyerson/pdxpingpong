@@ -3,9 +3,10 @@ pongApp.controller('LeaderboardController', function($scope, $location, ParseSer
     var lastRating = -1;
     var lastRank = 0;
     angular.forEach(players, function(value, key) {
+
         if (value.rating !== lastRating) {
             lastRating = value.rating;
-            lastRank++;
+            lastRank = key + 1;
         }
         value.rankNumber = lastRank;
     });
