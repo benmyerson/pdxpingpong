@@ -1,6 +1,7 @@
 pongApp.controller('SeasonController', function($scope, ParseService) {
     var vm = this;
 
+    vm.recentGames = [];
     vm.games = 0;
     vm.points = 0;
     vm.lastGame = null;
@@ -13,6 +14,15 @@ pongApp.controller('SeasonController', function($scope, ParseService) {
         vm.games = stats.totalGames;
         vm.points = stats.totalPoints;
         vm.lastGame = stats.lastGame;
+    });
+
+
+    ParseService.Game.get({
+        'include': 'player1,player2',
+        'order': '-createdAt',
+        'limit': 3
+    }).then(function (games) {
+        vm.recentGames = games;
     });
 
     // Live stats
@@ -28,6 +38,7 @@ pongApp.controller('SeasonController', function($scope, ParseService) {
             vm.lastGame = game;
             vm.games += 1;
             vm.points += (game.player1Score + game.player2Score);
+            vm.recentGames.unshift(game);
         });
     });
 });

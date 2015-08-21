@@ -1,4 +1,4 @@
-<div ng-init="vm = leaderboard">
+<div ng-init="vm = leaderboard" style="height:100%;">
 
     <table class="LeaderBoard">
         <tbody>
@@ -9,9 +9,10 @@
                     | limitTo: (device.isJumbotron ? 10 : 20)
                     track by player.objectId
                     "
+                ng-click="vm.gotoPlayer(player.objectId)"
                 >
                 <td class="PlayerStats__rank">
-                    {{$index + 1 | rank}}
+                    {{player.rankNumber | rank}}
                     <small>rank</small>
                 </td>
                 <td class="PlayerStats__name">
@@ -55,9 +56,10 @@
                     | limitTo: 10 : 10
                     track by player.objectId
                     "
+                ng-click="vm.gotoPlayer(player.objectId)"
                 >
                 <td class="PlayerStats__rank">
-                    {{$index + 11 | rank}}
+                    {{player.rankNumber | rank}}
                     <small>rank</small>
                 </td>
                 <td class="PlayerStats__name">

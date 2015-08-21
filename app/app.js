@@ -14,21 +14,16 @@ pongApp.config(function($compileProvider) {
 pongApp.config(function($routeProvider) {
     $routeProvider
         .when('/', {
-            controller: 'MainController as main',
-            templateUrl: 'views/main/main.html'
-        })
-        .when('/leaderboard', {
             controller: 'LeaderboardController as leaderboard',
             templateUrl: 'views/leaderboard/leaderboard.html',
             resolve: {
                 players: function(ParseService) {
                     return ParseService.Player.get({
-                        order: "-winPercentage",
-                        limit: 20
+                        limit: 20,
+                        order: '-rating,-games'
                     });
                 }
             }
-
         })
         .when('/game', {
             controller: 'GameController as game',
@@ -40,5 +35,33 @@ pongApp.config(function($routeProvider) {
                     });
                 }
             }
+        })
+        .when('/player/:id', {
+            controller: 'PlayerController as vm',
+            templateUrl: 'views/player/player.html',
+            resolve: {
+                player: function(ParseService, $route) {
+                    return ParseService.Player.get({
+                        objectId: $route.current.params.id
+                    });
+                },
+                games: function(ParseService, $route) {
+                    var player = ParseService.objToPointer({objectId: $route.current.params.id}, "Player");
+                    return ParseService.Game.get({
+                        'where': {
+                            '$or': [
+                                {'player1': player},
+                                {'player2': player}
+                            ]
+                        },
+                        'include': 'player1,player2',
+                        'order': '-createdAt'
+                    });
+                }
+            }
+        })
+        .otherwise({
+            redirectTo: '/'
         });
+
 });

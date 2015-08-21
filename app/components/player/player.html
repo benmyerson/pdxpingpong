@@ -1,0 +1,24 @@
+<div class="Player">
+    <h1>{{vm.player.name}}</h1>
+    <label for="">Against: </label>
+    <select ng-change="vm.updateFilter()" ng-required="true" ng-model="vm.currentFilter" ng-options="player for player in vm.opponents">
+        <option value="">All Opponents</option>
+    </select>
+
+    <dl>
+        <dt>Wins</dt>
+        <dd>{{vm.wins}}</dd>
+        <dt>Losses</dt>
+        <dd>{{vm.losses}}</dd>
+    </dl>
+
+    <div class="Player__game-chart">
+        <div ng-repeat="game in vm.games | filter:vm.currentFilter" class="Player__game" ng-class="vm.getPlayerGameOutcomeClass(game)" ng-style="{height: (vm.getScoreDiff(game) * 100) + 'px'}">
+
+            <div class="Player__game__tooltip">
+                <div>{{game.createdAt | date}} vs. <a ng-href="#/player/{{vm.getGameOpponent(game).objectId}}">{{ vm.getGameOpponent(game).name }}</a></div>
+                {{ game.player1Score }} - {{ game.player2Score }}
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,8 +3,21 @@
 .Season {
     padding: 2em;
     text-align: center;
+    position:relative;
     .clearfix;
+    &__new-game {
+        display:block;
+        font:600 1.2em/1.8 "proxima-nova";
+        background-color: @bbcom-blue;
+        color:@text-white;
+        text-transform: uppercase;
+        margin:10px 0;
+        text-decoration: none;
+        &:hover {
+            background-color: @bbcom-blue-light;
 
+        }
+    }
     &__brand {
         height: auto;
         max-width: 100%;

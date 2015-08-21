@@ -4,6 +4,8 @@
         <img class="Season__brand" src="images/logo.png">
     </a>
 
+    <a href="#/game" class="Season__new-game">new game</a>
+
     <div class="Season__league">
         <div>{{vm.season}}</div>
         <small>current season</small>
@@ -22,7 +24,7 @@
     <div ng-if="vm.lastGame" class="Season__last-game">
         <h1>Last Game</h1>
         <div class="Season__last-game__player" ng-class="{'Season__last-game__player--winner': vm.lastGame.player1.streak > 0}">
-            {{vm.lastGame.player1.name}} ({{vm.lastGame.player1Score}}) 
+            {{vm.lastGame.player1.name}} ({{vm.lastGame.player1Score}})
             <span>{{vm.lastGame.player1.streak}}</span>
         </div>
         <div class="Season__last-game__player" ng-class="{'Season__last-game__player--winner': vm.lastGame.player2.streak > 0}">

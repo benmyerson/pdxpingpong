@@ -1,0 +1,58 @@
+.Player {
+    padding:1em;
+    &__game-chart {
+        white-space: nowrap;
+        max-width: 100%;
+        height: 220px;
+        overflow-x: auto;
+    }
+    select {
+        margin-left:10px;
+        text-transform: none;
+    }
+    &__game{
+        display:inline-block;
+        position: relative;
+        margin:0.5em;
+        width:10px;
+        vertical-align: middle;
+        &__tooltip {
+            display:none;
+            background: #000;
+            z-index: 90001;
+            padding:1em;
+            border-radius: 3px;
+        }
+        &:hover {
+            box-shadow: 0 0 10px 2px #efefef;
+            cursor: pointer;
+            .Player__game__tooltip {
+                display:inline-block;
+                position: absolute;
+                top: 100%;
+                left:-5px;
+            }
+        }
+        &--win {
+            background: green;
+
+            .Player__game__tooltip {
+                border:1px solid green;
+            }
+        }
+        &--loss {
+            background: red;
+            .Player__game__tooltip {
+                border:1px solid red;
+            }
+        }
+        a {
+            color:white;
+            font-weight: bold;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

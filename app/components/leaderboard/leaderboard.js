@@ -1,4 +1,15 @@
-pongApp.controller('LeaderboardController', function($scope, ParseService, players, relay, util) {
+pongApp.controller('LeaderboardController', function($scope, $location, ParseService, players, relay, util) {
+
+    var lastRating = -1;
+    var lastRank = 0;
+    angular.forEach(players, function(value, key) {
+        if (value.rating !== lastRating) {
+            lastRating = value.rating;
+            lastRank++;
+        }
+        value.rankNumber = lastRank;
+    });
+
     this.players = players;
 
     function updatePlayer(id, data) {
@@ -15,4 +26,8 @@ pongApp.controller('LeaderboardController', function($scope, ParseService, playe
             updatePlayer(id, player);
         });
     });
+
+    this.gotoPlayer = function(playerId) {
+        $location.path('player/' + playerId);
+    };
 });
