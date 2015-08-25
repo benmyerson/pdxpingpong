@@ -19,6 +19,16 @@ pongApp.config(function($routeProvider) {
             resolve: {
                 players: function(ParseService) {
                     return ParseService.Player.get({
+                        where: {
+                            'team': {
+                                '$inQuery': {
+                                    'where': {
+                                        'name': 'PDX'
+                                    },
+                                    'className': 'Team'
+                                }
+                            }
+                        },
                         limit: 20,
                         order: '-rating,-games'
                     });
