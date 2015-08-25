@@ -207,6 +207,7 @@ function computeProvisionalRating(player, opponentRating, playerWon) {
     var games = player.get("ratedGames") - 1;
 
     var playerRating = player.get("provisionalRating");
+    if (!playerRating) playerRating = 0;
 
     var delta = playerWon ? 400 : -400;
 
