@@ -10,10 +10,10 @@ pongApp.controller('LeaderboardController', function($scope, $location, ParseSer
     function updateRankings() {
         var lastRating = -1;
         var lastRank = 0;
-        angular.forEach(players, function(player) {
+        angular.forEach(players, function(player, key) {
             if (player.rating !== lastRating) {
                 lastRating = player.rating;
-                lastRank += 1;
+                lastRank = key + 1;
             }
             player.rankNumber = lastRank;
         });
