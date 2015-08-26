@@ -5,7 +5,6 @@
             <tr class="PlayerStats"
                 ng-repeat="
                     player in vm.players
-                    | orderBy: ['-rating','-games']
                     | limitTo: (device.isJumbotron ? 10 : 20)
                     track by player.objectId
                     "
@@ -52,7 +51,6 @@
             <tr class="PlayerStats"
                 ng-repeat="
                     player in vm.players
-                    | orderBy: ['-rating','-games']
                     | limitTo: 10 : 10
                     track by player.objectId
                     "

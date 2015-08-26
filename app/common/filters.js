@@ -9,3 +9,10 @@ pongApp.filter('ratio', function() {
         return parseInt(number * 100, 10) + '%';
     };
 });
+
+pongApp.filter('leaderboard', function($filter) {
+    var sort = $filter('orderBy');
+    return function(players) {
+        return sort(players, ['-rating', '-games']);
+    };
+});

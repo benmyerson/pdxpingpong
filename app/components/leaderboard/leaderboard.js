@@ -1,10 +1,22 @@
-pongApp.controller('LeaderboardController', function($scope, $location, ParseService, players, relay, util) {
+pongApp.controller('LeaderboardController', function(
+    $scope,
+    $location,
+    leaderboardFilter,
+    ParseService,
+    players,
+    relay,
+    util
+    ) {
 
     function updatePlayer(id, data) {
         var player = util.findWhere(players, 'objectId', id);
         if (player) {
             angular.extend(player, data);
         }
+    }
+
+    function sortPlayers() {
+        players = leaderboardFilter(players);
     }
 
     function updateRankings() {
@@ -24,9 +36,12 @@ pongApp.controller('LeaderboardController', function($scope, $location, ParseSer
             objectId: id
         }).then(function(player) {
             updatePlayer(id, player);
+            sortPlayers();
             updateRankings();
         });
     });
+
+    sortPlayers();
 
     updateRankings();
 
