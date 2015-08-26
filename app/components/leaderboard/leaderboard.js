@@ -8,6 +8,8 @@ pongApp.controller('LeaderboardController', function(
     util
     ) {
 
+    var vm = this;
+
     function updatePlayer(id, data) {
         var player = util.findWhere(players, 'objectId', id);
         if (player) {
@@ -15,13 +17,13 @@ pongApp.controller('LeaderboardController', function(
         }
     }
 
-    function sortPlayers() {
-        players = leaderboardFilter(players);
-    }
-
-    function updateRankings() {
+    function updatePlayers() {
         var lastRating = -1;
         var lastRank = 0;
+
+        players = leaderboardFilter(players);
+        vm.players = players;
+
         angular.forEach(players, function(player, key) {
             if (player.rating !== lastRating) {
                 lastRating = player.rating;
@@ -36,18 +38,13 @@ pongApp.controller('LeaderboardController', function(
             objectId: id
         }).then(function(player) {
             updatePlayer(id, player);
-            sortPlayers();
-            updateRankings();
+            updatePlayers();
         });
     });
 
-    sortPlayers();
+    updatePlayers();
 
-    updateRankings();
-
-    this.players = players;
-
-    this.gotoPlayer = function(playerId) {
+    vm.gotoPlayer = function(playerId) {
         $location.path('player/' + playerId);
     };
 });
