@@ -10,9 +10,25 @@ pongApp.filter('ratio', function() {
     };
 });
 
-pongApp.filter('leaderboard', function($filter) {
+pongApp.filter('leaderboard', function($filter, numberFilter) {
     var sort = $filter('orderBy');
     return function(players) {
-        return sort(players, ['-rating', '-games']);
+
+        var sorted = sort(players, ['-rating', '-games']);
+
+        var provisional = [];
+        var nonProvisional = [];
+        sorted.forEach(function (player) {
+            if (player.ratedGames >= 6) {
+                player.rating = numberFilter(player.rating);
+                nonProvisional.push(player);
+            }else {
+                player.rating = '--';
+                provisional.push(player);
+            }
+        });
+        return nonProvisional.concat(provisional.sort(function(a,b){
+            return -1 * (a.ratedGames - b.ratedGames);
+        }));
     };
 });

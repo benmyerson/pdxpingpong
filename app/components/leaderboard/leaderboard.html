@@ -3,6 +3,7 @@
     <table class="LeaderBoard">
         <tbody>
             <tr class="PlayerStats"
+                ng-style="{opacity: 0.1 + (player.ratedGames / 6)}"
                 ng-repeat="
                     player in vm.players
                     | limitTo: (device.isJumbotron ? 10 : 20)
@@ -19,7 +20,7 @@
                     <small>bodyspace name</small>
                 </td>
                 <td class="PlayerStats__stat PlayerStats__stat--first">
-                    {{ player.rating | number }}
+                    {{player.rating}}
                     <small>rating</small>
                 </td>
                 <td class="PlayerStats__stat">
@@ -49,6 +50,7 @@
     <table class="LeaderBoard" ng-if="device.isJumbotron">
         <tbody>
             <tr class="PlayerStats"
+                ng-style="{opacity: 0.1 + (player.ratedGames / 6)}"
                 ng-repeat="
                     player in vm.players
                     | limitTo: 10 : 10
@@ -65,7 +67,7 @@
                     <small>bodyspace name</small>
                 </td>
                 <td class="PlayerStats__stat PlayerStats__stat--first">
-                    {{ player.rating | number }}
+                    {{player.rating}}
                     <small>rating</small>
                 </td>
                 <td class="PlayerStats__stat">
