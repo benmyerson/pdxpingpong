@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-babel');
 
     grunt.initConfig({
 
@@ -84,6 +85,14 @@ module.exports = function(grunt) {
             }
         },
 
+        babel: {
+            dist: {
+                files: {
+                    'public/scripts/app.js': 'public/scripts/app.js'
+                }
+            }
+        },
+
         watch: {
             styles: {
                 files: 'app/components/**/*.less',
@@ -97,7 +106,7 @@ module.exports = function(grunt) {
                     'app/common/**/*.js',
                     'app/components/**/*.js',
                 ],
-                tasks: 'concat'
+                tasks: ['concat', 'babel']
             },
             templates: {
                 files: 'app/components/**/*.html',
@@ -115,7 +124,7 @@ module.exports = function(grunt) {
 
     });
 
-    grunt.registerTask('default', ['clean', 'copy', 'less', 'ngtemplates', 'concat']);
+    grunt.registerTask('default', ['clean', 'copy', 'less', 'ngtemplates', 'concat', 'babel']);
 
     grunt.registerTask('reload-clients', 'Reload currently running web apps', function() {
         var donzo = this.async(),
