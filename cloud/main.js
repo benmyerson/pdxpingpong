@@ -208,6 +208,8 @@ Parse.Cloud.beforeSave('Player', function(request, response) {
         return;
     }
 
+    player.set("isProvisional", player.get("ratedGames") < 6);
+
     response.success();
 });
 
