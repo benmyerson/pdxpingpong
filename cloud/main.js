@@ -64,6 +64,15 @@ Parse.Cloud.define("mainStats", function(request, response) {
 
 Parse.Cloud.beforeSave("Game", function(request, response) {
     var game = request.object;
+    var KFactor = game.get("KFactor");
+    /*
+     * Only execute the following for new games
+     */
+    if (KFactor) {
+        response.success(game);
+        return;
+    }
+
     var winner = getGameWinner(game);
     var loser = getGameLoser(game);
     var winnerPoints = Math.max(game.get('player1Score'), game.get('player2Score'));
@@ -132,6 +141,12 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
 
         return [winner, loser]
     }).spread(function(winner, loser) {
+        var KFactor = 32;
+        if (winner.get("ratedGames") < 6 || loser.get("ratedGames") < 6) {
+            KFactor = 24;
+        }
+        game.set("KFactor", KFactor);
+
         rating.updatePlayerRatings(winner, loser, winnerPoints, loserPoints, game);
 
         winner.save();
