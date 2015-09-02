@@ -3,7 +3,7 @@
  * the game outcome and the opponent's rating.
  * https://en.wikipedia.org/wiki/Elo_rating_system#Mathematical_details
  */
-function computeEloRating(player, playerRating, opponentRating, playerWon) {
+function computeEloRating(player, playerRating, opponentRating, playerWon, K) {
     /*
      * Assuming 0 points for a loss and 1 for a win, compute the
      * expected (average) score for this player against this
@@ -22,7 +22,6 @@ function computeEloRating(player, playerRating, opponentRating, playerWon) {
      * that can be gained or lost by a single game. And when two equally-rated
      * players play, each will gain or lose half this amount.
      */
-    var K = 40;
     var rating = playerRating + K * (actual - expected);
     rating = Math.round(rating);
 
@@ -54,7 +53,7 @@ function computeProvisionalRating(player, opponentRating, playerWon) {
     player.set("provisionalRating", rating);
 }
 
-function updatePlayerRating(player, playerRating, opponentRating, playerWon) {
+function updatePlayerRating(player, playerRating, opponentRating, playerWon, K) {
     /*
      * Players are provisional until they complete this many rated
      * games.
@@ -62,7 +61,7 @@ function updatePlayerRating(player, playerRating, opponentRating, playerWon) {
     var numProvisionalGames = 6;
 
     if (player.get("ratedGames") > numProvisionalGames) {
-        computeEloRating(player, playerRating, opponentRating, playerWon);
+        computeEloRating(player, playerRating, opponentRating, playerWon, K);
     } else {
         computeProvisionalRating(player, opponentRating, playerWon);
     }
@@ -130,10 +129,13 @@ module.exports = {
     
         var winnerRating = winner.get("rating");
         var loserRating = loser.get("rating");
-    
-        updatePlayerRating(winner, winnerRating, loserRating, true);
-        updatePlayerRating(loser, loserRating, winnerRating, false);
-    
+      
+        var KFactor = game.get("KFactor");
+        console.log("Scoring game with K factor " + KFactor);
+
+        updatePlayerRating(winner, winnerRating, loserRating, true, KFactor);
+        updatePlayerRating(loser, loserRating, winnerRating, false, KFactor);
+
         var winnerName = winner.get("name");
         var loserName = loser.get("name");
     
