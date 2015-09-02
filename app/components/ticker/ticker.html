@@ -1,7 +1,0 @@
-<section ng-controller="SeasonController as vm">
-    <marquee scrollamount="6">
-        <div class="Ticker__game" ng-repeat="game in vm.recentGames">
-            {{game.createdAt | date:'short'}} {{game.player1.name}} ({{game.player1Score}}) - {{game.player2.name}} ({{game.player2Score}})
-        </div>
-    </marquee>
-</section>
