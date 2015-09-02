@@ -1,5 +1,7 @@
 var pongApp = angular.module('pdxPingPong', ['ngRoute']);
 
+pongApp.value('Firebase', window.Firebase);
+
 pongApp.run(function(relay) {
     relay.$sub('client.reload', function() {
         // Reload the current page without hitting the cache
