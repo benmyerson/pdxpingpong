@@ -87,7 +87,7 @@ pongApp.factory('EventEmitter', function() {
     };
 
     /**
-     * Add an EventListener that's only called one.
+     * Add an EventListener that's only called once.
      *
      * @param {String} event Name of the event.
      * @param {Function} fn Callback function.
