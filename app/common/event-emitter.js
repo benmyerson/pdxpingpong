@@ -5,13 +5,13 @@ pongApp.factory('EventEmitter', function() {
      *
      * @param {Function} fn Event handler to be called.
      * @param {Mixed} context Context for function execution.
-     * @param {Boolean} [once=false] Only emit once
+     * @param {Boolean} [one=false] Only emit once
      * @api private
      */
-    function Listener(fn, context, once) {
+    function Listener(fn, context, one) {
         this.fn = fn;
         this.context = context || null;
-        this.once = once || false;
+        this.one = !!one;
     }
 
     /**
@@ -54,7 +54,7 @@ pongApp.factory('EventEmitter', function() {
             context = listener.context;
             fn = listener.fn;
 
-            if (listener.once) this.off(event, fn, null, true);
+            if (listener.one) this.off(event, fn, null, true);
 
             switch (args.length) {
                 case 0:  fn.call(context); break;
@@ -78,17 +78,16 @@ pongApp.factory('EventEmitter', function() {
      * @returns {EventEmitter} The EventEmitter instance.
      * @api public
      */
-    EventEmitter.prototype.on = function on(event, fn, context) {
+    EventEmitter.prototype.on = function on(event, fn, context, one) {
         if (!this._events) this._events = Object.create(null);
         if (!this._events[event]) this._events[event] = [];
-
-        this._events[event].push(new Listener(fn, context));
+        this._events[event].push(new Listener(fn, context, one));
 
         return this;
     };
 
     /**
-     * Add an EventListener that's only called once.
+     * Add an EventListener that's only called one.
      *
      * @param {String} event Name of the event.
      * @param {Function} fn Callback function.
@@ -97,12 +96,7 @@ pongApp.factory('EventEmitter', function() {
      * @api public
      */
     EventEmitter.prototype.one = function one(event, fn, context) {
-        if (!this._events) this._events = Object.create(null);
-        if (!this._events[event]) this._events[event] = [];
-
-        this._events[event].push(new Listener(fn, context, true));
-
-        return this;
+        return this.on(event, fn, context, true);
     };
 
     /**
@@ -111,11 +105,11 @@ pongApp.factory('EventEmitter', function() {
      * @param {String} event The event we want to remove.
      * @param {Function} fn The listener that we need to find.
      * @param {Mixed} context Only remove listeners matching this context.
-     * @param {Boolean} once Only remove once listeners.
+     * @param {Boolean} one Only remove once listeners.
      * @returns {EventEmitter} The EventEmitter instance.
      * @api public
      */
-    EventEmitter.prototype.off = function off(event, fn, context, once) {
+    EventEmitter.prototype.off = function off(event, fn, context, one) {
         if (!arguments.length) return (this._events = null), this;
         else if (!this._events || !this._events[event]) return this;
 
@@ -125,7 +119,7 @@ pongApp.factory('EventEmitter', function() {
         if (fn) {
             for (var i = 0, len = listeners.length; i < len; i++) {
                 if (
-                    listeners[i].fn !== fn || (once && !listeners[i].once) || (context && listeners[i].context !== context)
+                    listeners[i].fn !== fn || (one && !listeners[i].one) || (context && listeners[i].context !== context)
                 ) {
                     events.push(listeners[i]);
                 }
