@@ -65,6 +65,7 @@ Parse.Cloud.define("mainStats", function(request, response) {
 Parse.Cloud.beforeSave("Game", function(request, response) {
     var game = request.object;
     var KFactor = game.get("KFactor");
+    var season = game.get("season");
     /*
      * Only execute the following for new games
      */
@@ -78,7 +79,7 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
     var winnerPoints = Math.max(game.get('player1Score'), game.get('player2Score'));
     var loserPoints = Math.min(game.get('player1Score'), game.get('player2Score'));
 
-    var Player = Parse.Object.extend("Player");
+    var Player = Parse.Object.extend("SeasonPlayer");
     var winnerQuery = new Parse.Query(Player);
     var loserQuery = new Parse.Query(Player);
 
@@ -229,4 +230,35 @@ Parse.Cloud.afterSave('Player', function(request) {
             verb = isNewObject(player) ? 'create' : 'update';
         relay.publish('player.' + verb, playerId);
     });
+});
+
+
+Parse.Cloud.beforeSave('Season', function(request) {
+    var season = request.object;
+    var Profile = new Parse.Object.extend("Profile"),
+        Player = new Parse.Object.extend("Player"),
+        allProfiles = new Parse.Query(Profile);
+
+    if (isNewObject(season)) {
+        allProfiles.each(function(profile) {
+            var seasonPlayer = new Player();
+            seasonPlayer.set("season", season);
+            seasonPlayer.set("profile", profile);
+            seasonPlayer.set("games", 0);
+            seasonPlayer.set("wins", 0;)
+            seasonPlayer.set("losses", 0);
+            seasonPlayer.set("opponentPointsPerGame", 0;)
+            seasonPlayer.set("pointsPerGame", 0);
+            seasonPlayer.set("totalPoints", 0);
+            seasonPlayer.set("winPercentage", 0);
+            seasonPlayer.set("opponentTotalPoints", 0);
+            seasonPlayer.set("streak", 0);
+            seasonPlayer.set("ratedGames", 0);
+            seasonPlayer.set("rating", 1200);
+            seasonPlayer.set("provisionalRating", 1200);
+            seasonPlayer.set("isProvisional", true);
+
+        });
+    }
+
 });
