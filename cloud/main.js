@@ -154,7 +154,7 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
         response.success(game);
     }, function(err) {
         response.error(err);
-    };
+    });
 });
 
 Parse.Cloud.beforeSave('Player', function(request, response) {
