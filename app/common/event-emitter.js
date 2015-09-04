@@ -116,7 +116,7 @@ pongApp.factory('EventEmitter', function() {
         var listeners = this._events[event],
             events = [];
 
-        if (fn) {
+        if (typeof fn == 'function') {
             for (var i = 0, len = listeners.length; i < len; i++) {
                 if (
                     listeners[i].fn !== fn || (one && !listeners[i].one) || (context && listeners[i].context !== context)
