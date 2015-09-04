@@ -149,14 +149,12 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
 
         rating.updatePlayerRatings(winner, loser, winnerPoints, loserPoints, game);
 
-        winner.save();
-        loser.save();
-
+        return util.Promise.all([winner.save(), loser.save()]);
+    }).then(function() {
         response.success(game);
-    },
-    function(err) {
+    }, function(err) {
         response.error(err);
-    });
+    };
 });
 
 Parse.Cloud.beforeSave('Player', function(request, response) {
@@ -199,7 +197,7 @@ Parse.Cloud.beforeSave('Player', function(request, response) {
                 player.set("opponentTotalPoints", 0);
                 player.set("streak", 0);
                 player.set("team", pdx);
-    
+
                 response.success();
             }, error: function(error) {
                 console.log("could not find team PDX: " + error);
