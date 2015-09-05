@@ -1,4 +1,4 @@
-<div ng-init="vm = leaderboard" style="height:100%;">
+<div ng-init="vm = leaderboard">
 
     <table class="LeaderBoard">
         <tbody>
@@ -20,7 +20,7 @@
                     <small>bodyspace name</small>
                 </td>
                 <td class="PlayerStats__stat PlayerStats__stat--first">
-                    {{player.rating}}
+                    {{player.displayRating}}
                     <small>rating</small>
                 </td>
                 <td class="PlayerStats__stat">
@@ -67,7 +67,7 @@
                     <small>bodyspace name</small>
                 </td>
                 <td class="PlayerStats__stat PlayerStats__stat--first">
-                    {{player.rating}}
+                    {{player.displayRating}}
                     <small>rating</small>
                 </td>
                 <td class="PlayerStats__stat">

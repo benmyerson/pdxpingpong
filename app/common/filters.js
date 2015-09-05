@@ -20,10 +20,10 @@ pongApp.filter('leaderboard', function($filter, numberFilter) {
         var nonProvisional = [];
         sorted.forEach(function (player) {
             if (player.ratedGames >= 6) {
-                player.rating = numberFilter(player.rating);
+                player.displayRating = numberFilter(player.rating);
                 nonProvisional.push(player);
             }else {
-                player.rating = '--';
+                player.displayRating = '--';
                 provisional.push(player);
             }
         });
