@@ -169,9 +169,9 @@ Parse.Cloud.beforeSave('Player', function(request, response) {
                 player.set("streak", 0);
                 player.set("team", pdx);
 
-                response.success();
+                response.success(player);
             }, error: function(error) {
-                console.log("could not find team PDX: " + error);
+                response.error("could not find team PDX: " + error);
             }
         });
         return;
@@ -179,7 +179,7 @@ Parse.Cloud.beforeSave('Player', function(request, response) {
 
     player.set("isProvisional", player.get("ratedGames") < 6);
 
-    response.success();
+    response.success(player);
 });
 
 
