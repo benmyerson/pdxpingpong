@@ -3,7 +3,7 @@ var _ = require('underscore'),
     rating = require('cloud/rating'),
     relay = require('cloud/relay'),
 
-    classes = require('cloud/classes'),
+    classes = require('cloud/classes/index'),
     Game = classes.Game,
     Team = classes.Team,
     Season = classes.Season,
@@ -196,9 +196,9 @@ Parse.Cloud.beforeSave('Season', function(request) {
             seasonPlayer.set("season", season);
             seasonPlayer.set("profile", profile);
             seasonPlayer.set("games", 0);
-            seasonPlayer.set("wins", 0;)
+            seasonPlayer.set("wins", 0);
             seasonPlayer.set("losses", 0);
-            seasonPlayer.set("opponentPointsPerGame", 0;)
+            seasonPlayer.set("opponentPointsPerGame", 0);
             seasonPlayer.set("pointsPerGame", 0);
             seasonPlayer.set("totalPoints", 0);
             seasonPlayer.set("winPercentage", 0);
