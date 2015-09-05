@@ -3,6 +3,12 @@ pongApp.factory('relay', function(EventEmitter, Firebase) {
         relayRef = new Firebase('https://pdxpong.firebaseio.com/relay'),
         eventsRef = relayRef.child('events');
 
+    // Promises resolve asynchronously and have
+    // better (faster) resolution times than setTimeout
+    function nextTick(fn) {
+        new Promise(function(yep) { yep(); }).then(fn);
+    }
+
     // Get a reliable, unique timeStamp that serves as the offset for
     // events we're interested in. Why? We don't care about things
     // that happened in the past. Date.now() *could* be used but I don't
@@ -22,8 +28,14 @@ pongApp.factory('relay', function(EventEmitter, Firebase) {
             startAt(startAtTimeStamp);
 
         ref.on('child_added', function eventRefHandler(snap) {
-            // Emit the event and pass on the snap
-            emitter.emit(snap.val().ev, snap);
+            var event = snap.val().ev;
+            
+            // Firebase has this nasty habit of firing handlers
+            // synchronously for events that are triggered locally..
+            // force async
+            nextTick(function() {
+                emitter.emit(event, snap);
+            });
         });
 
     });
