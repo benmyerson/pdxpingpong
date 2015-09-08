@@ -6,7 +6,7 @@ pongApp.factory('relay', function(EventEmitter, Firebase) {
     // Promises resolve asynchronously and have
     // better (faster) resolution times than setTimeout
     function nextTick(fn) {
-        new Promise(function(yep) { yep(); }).then(fn);
+        Promise.resolve().then(fn);
     }
 
     // Get a reliable, unique timeStamp that serves as the offset for
@@ -29,7 +29,7 @@ pongApp.factory('relay', function(EventEmitter, Firebase) {
 
         ref.on('child_added', function eventRefHandler(snap) {
             var event = snap.val().ev;
-            
+
             // Firebase has this nasty habit of firing handlers
             // synchronously for events that are triggered locally..
             // force async
