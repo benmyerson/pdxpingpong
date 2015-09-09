@@ -1,4 +1,7 @@
-var Season = Parse.Object.extend('Season', {
+var ClassHooks = require('cloud/classes/class.hooks'),
+    Season;
+
+Season = Parse.Object.extend('Season', {
 
     // Instance methods
 
@@ -12,7 +15,9 @@ var Season = Parse.Object.extend('Season', {
 
     query: function() {
         return new Parse.Query(this);
-    }
+    },
+
+    hooks: new ClassHooks(Season)
 
 });
 

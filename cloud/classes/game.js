@@ -1,4 +1,7 @@
-var Game = Parse.Object.extend('Game', {
+var ClassHooks = require('cloud/classes/class.hooks'),
+    Game;
+
+Game = Parse.Object.extend('Game', {
 
     // Instance methods
 
@@ -38,7 +41,9 @@ var Game = Parse.Object.extend('Game', {
 
     query: function() {
         return new Parse.Query(this);
-    }
+    },
+
+    hooks: new ClassHooks(Game)
 
 });
 
