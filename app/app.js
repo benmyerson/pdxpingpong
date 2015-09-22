@@ -31,7 +31,6 @@ pongApp.config(function($routeProvider) {
                                 }
                             }
                         },
-                        limit: 20,
                         order: '-rating,-games'
                     });
                 }
