@@ -91,7 +91,8 @@ function sendPush(winnerName, loserName, winnerRating, loserRating, winnerScore,
             alert: {
                 body: body,
                 title: "New game scored."
-            }
+            },
+            "content-available": 1
         }
     }, {
         success: function() {
