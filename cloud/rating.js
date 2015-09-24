@@ -92,7 +92,8 @@ function sendPush(winnerName, loserName, winnerRating, loserRating, winnerScore,
                 body: body,
                 title: "New game scored."
             },
-            "content-available": 1
+            "content-available": 1,
+            sound: "adjust.wav"
         }
     }, {
         success: function() {
