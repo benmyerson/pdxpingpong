@@ -23,7 +23,15 @@ Parse.Cloud.define("mainStats", function(request, response) {
         lastGame: {}
     };
 
-    var statsQuery = Game.query().each(function(game) {
+    var statsQuery = Game.query()
+                         .select([
+                             // Only grab the columns we need for
+                             // getting the total points
+                             'player1Score',
+                             'player2Score'
+                         ]);
+
+    statsQuery = statsQuery.each(function(game) {
         ret.totalGames += 1;
         ret.totalPoints += game.getTotalPoints();
     });
