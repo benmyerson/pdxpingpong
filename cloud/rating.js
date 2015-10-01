@@ -71,7 +71,7 @@ function updatePlayerRating(player, playerRating, opponentRating, playerWon, K) 
     }
 }
 
-function sendPush(winnerName, loserName, winnerRating, loserRating, winnerScore, loserScore) {
+function sendPush(winnerName, loserName, winnerRating, loserRating, winnerScore, loserScore, streak, gameId) {
     /*
      * Send a push to anyone who cares.
      */
@@ -93,7 +93,21 @@ function sendPush(winnerName, loserName, winnerRating, loserRating, winnerScore,
                 title: "New game scored."
             },
             "content-available": 1,
-            sound: "adjust.wav"
+            sound: "adjust.wav",
+            bbcom: {
+                gameId: gameId,
+                winner: {
+                    name: winnerName,
+                    rating: winnerRating,
+                    score: winnerScore,
+                    streak: streak
+                },
+                loser: {
+                    name: loserName,
+                    rating: loserRating,
+                    score: loserScore
+                }
+            }
         }
     }, {
         success: function() {
@@ -141,7 +155,7 @@ module.exports = {
         var winnerName = winner.get("name");
         var loserName = loser.get("name");
     
-        sendPush(winnerName, loserName, winnerRating, loserRating, winnerScore, loserScore);
-    }
+    },
+    sendPush: sendPush
     
 };

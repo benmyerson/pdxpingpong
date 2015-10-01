@@ -230,7 +230,26 @@ Parse.Cloud.beforeSave('Season', function(request) {
 Parse.Cloud.afterSave('Game', function(request) {
     var game = request.object,
         verb = game.isNew() ? 'create' : 'update';
-    relay.publish('game.' + verb, game.id);
+        id = game.id;
+    var winner = game.getWinner();
+    var loser = game.getLoser();
+    var winnerScore = game.getWinnerPoints();
+    var loserScore = game.getLoserPoints();
+
+    winner.fetch().then(function(object) {
+        winner = object;
+        return loser.fetch().then(function(object) {
+            loser = object;
+        });
+    }).then(function() {
+        rating.sendPush(winner.get("name"), loser.get("name"), winner.get("rating"),
+            loser.get("rating"), winnerScore, loserScore, winner.get("streak"), id);
+
+        Game.query().get(id).then(function(game) {
+            var verb = game.isNew() ? 'create' : 'update';
+            relay.publish('game.' + verb, id);
+        });
+    });
 });
 
 
