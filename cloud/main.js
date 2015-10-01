@@ -221,12 +221,8 @@ Parse.Cloud.beforeSave('Season', function(request) {
  */
 Parse.Cloud.afterSave('Game', function(request) {
     var game = request.object,
-        id = game.id;
-
-    // Game.query().get(id).then(function(game) {
-        var verb = game.isNew() ? 'create' : 'update';
-        relay.publish('game.' + verb, id);
-    // });
+        verb = game.isNew() ? 'create' : 'update';
+    relay.publish('game.' + verb, game.id);
 });
 
 
@@ -235,12 +231,8 @@ Parse.Cloud.afterSave('Game', function(request) {
  */
 Parse.Cloud.afterSave('Player', function(request) {
     var player = request.object,
-        id = player.id;
-
-    // Player.query().get(id).then(function(player) {
-        var verb = player.isNew() ? 'create' : 'update';
-        relay.publish('player.' + verb, id);
-    // });
+        verb = player.isNew() ? 'create' : 'update';
+    relay.publish('player.' + verb, player.id);
 });
 
 
@@ -249,10 +241,6 @@ Parse.Cloud.afterSave('Player', function(request) {
  */
 Parse.Cloud.afterSave('Season', function(request) {
     var season = request.object,
-        id = season.id;
-
-    // Season.query().get(id).then(function(season) {
-        var verb = season.isNew() ? 'create' : 'update';
-        relay.publish('season.' + verb, id);
-    // });
+        verb = season.isNew() ? 'create' : 'update';
+    relay.publish('season.' + verb, season.id);
 });
