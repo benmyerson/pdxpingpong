@@ -117,7 +117,7 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
 
         rating.updatePlayerRatings(winner, loser, winnerPoints, loserPoints, game);
 
-        return Promise.all([winner.save(), loser.save()]);
+        return Parse.Object.saveAll([winner, loser]);
     }).then(function() {
         console.log('Game.beforeSave END');
         response.success(game);
