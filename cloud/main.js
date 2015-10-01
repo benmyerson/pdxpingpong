@@ -65,6 +65,8 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
     var winnerPoints = game.getWinnerPoints();
     var loserPoints = game.getLoserPoints();
 
+    console.log('Game.beforeSave BEGIN');
+
     // run Player queries in parallel
     Promise.all([
         Player.query().get(
@@ -107,8 +109,6 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
 
         loser.updateLosingStreak();
 
-        return [winner, loser]
-    }).spread(function(winner, loser) {
         var KFactor = 32;
         if (winner.get("ratedGames") < 6 || loser.get("ratedGames") < 6) {
             KFactor = 24;
@@ -119,6 +119,7 @@ Parse.Cloud.beforeSave("Game", function(request, response) {
 
         return Promise.all([winner.save(), loser.save()]);
     }).then(function() {
+        console.log('Game.beforeSave END');
         response.success(game);
     }, function(err) {
         response.error(err);
@@ -222,10 +223,10 @@ Parse.Cloud.afterSave('Game', function(request) {
     var game = request.object,
         id = game.id;
 
-    Game.query().get(id).then(function(game) {
+    // Game.query().get(id).then(function(game) {
         var verb = game.isNew() ? 'create' : 'update';
         relay.publish('game.' + verb, id);
-    });
+    // });
 });
 
 
@@ -236,10 +237,10 @@ Parse.Cloud.afterSave('Player', function(request) {
     var player = request.object,
         id = player.id;
 
-    Player.query().get(id).then(function(player) {
+    // Player.query().get(id).then(function(player) {
         var verb = player.isNew() ? 'create' : 'update';
         relay.publish('player.' + verb, id);
-    });
+    // });
 });
 
 
@@ -250,8 +251,8 @@ Parse.Cloud.afterSave('Season', function(request) {
     var season = request.object,
         id = season.id;
 
-    Season.query().get(id).then(function(season) {
+    // Season.query().get(id).then(function(season) {
         var verb = season.isNew() ? 'create' : 'update';
         relay.publish('season.' + verb, id);
-    });
+    // });
 });
