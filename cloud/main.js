@@ -236,19 +236,19 @@ Parse.Cloud.afterSave('Game', function(request) {
     var winnerScore = game.getWinnerPoints();
     var loserScore = game.getLoserPoints();
 
-    winner.fetch().then(function(object) {
-        winner = object;
-        return loser.fetch().then(function(object) {
-            loser = object;
-        });
+    Promise.all([
+        winner.fetch(),
+        loser.fetch(),
+        Game.query().get(id)
+    ]).spread(function(w, l, game) {
+        winner = w;
+        loser = l;
+
+        var verb = game.isNew() ? 'create' : 'update';
+        relay.publish('game.' + verb, id);
     }).then(function() {
         rating.sendPush(winner.get("name"), loser.get("name"), winner.get("rating"),
             loser.get("rating"), winnerScore, loserScore, winner.get("streak"), id);
-
-        Game.query().get(id).then(function(game) {
-            var verb = game.isNew() ? 'create' : 'update';
-            relay.publish('game.' + verb, id);
-        });
     });
 });
 
