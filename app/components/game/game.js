@@ -1,7 +1,7 @@
 pongApp.controller('GameController', function($location, ParseService, players, relay) {
     this.players = players;
     this.newGame = {};
-    this.currentSeason = "Summer League";
+    this.currentSeason = "Winter League";
 
     this.completeGame = function() {
         this.newGame.player1 = ParseService.objToPointer(this.player1Obj, "Player");

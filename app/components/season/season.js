@@ -5,7 +5,7 @@ pongApp.controller('SeasonController', function($scope, ParseService) {
     vm.games = 0;
     vm.points = 0;
     vm.lastGame = null;
-    vm.season = 'summer league';
+    vm.season = 'winter league';
 
     // Initial stats
     ParseService.Fn.post({
